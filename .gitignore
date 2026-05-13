@@ -1,1 +1,16 @@
+# NetBeans project files
+nbproject/private/
+nbproject/build-impl.xml
+nbproject/genfiles.properties
+
+# Build output
+build/
+dist/
+
+# Mac OS
+.DS_Store
+
+# Logs
+*.log
+
 /nbproject/private/
