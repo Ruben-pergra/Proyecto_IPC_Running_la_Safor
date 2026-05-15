@@ -28,6 +28,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 
+import model.User;
+import model.SportActivityApp;
 
 public class FXMLRegisterController implements Initializable {
     // Email //
@@ -74,6 +76,15 @@ public class FXMLRegisterController implements Initializable {
     @FXML
     private Button bCancel;
     
+    // Nickname//
+    @FXML
+    private TextField nicknameField;
+    @FXML
+    private Label nicknameError;
+    
+    private BooleanProperty validNickname;
+    private ChangeListener<String> listenerNickname;
+    
     private void showError(boolean isValid, Node field, Node errorMessage){
         errorMessage.setVisible(!isValid);
         field.setStyle(((isValid) ? "" : "-fx-background-color: #FCE5E0"));
@@ -86,6 +97,8 @@ public class FXMLRegisterController implements Initializable {
         // Email //
         validEmail = new SimpleBooleanProperty();
         validEmail.setValue(Boolean.FALSE);
+        validNickname = new SimpleBooleanProperty();
+        validNickname.setValue(Boolean.FALSE);
         emailError.setVisible(false);
 
         //Check values when user leaves edits
@@ -156,10 +169,16 @@ public class FXMLRegisterController implements Initializable {
             }
         });
         
+        //Nickname//
+        nicknameField.focusedProperty().addListener((obs, oldV, newV) -> {
+            if (!newV) checkNickname();
+        });
+        
         // Boton aceptar //
-        BooleanBinding validFields = Bindings.and(validEmail, validPassword)
-                 .and(confirmPasswords)
-                  .and(validDate);
+        BooleanBinding validFields = Bindings.and(validEmail,validNickname)
+                .and(confirmPasswords)
+                .and(validDate)
+                .and (validPassword);
  
         bAccept.disableProperty().bind(
                         Bindings.not(validFields)
@@ -173,14 +192,14 @@ public class FXMLRegisterController implements Initializable {
     }
     private void checkEmail(){
         String email = emailField.getText();
-        boolean isValid = email.matches("^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$");
+        boolean isValid = User.checkEmail(email);
         validEmail.set(isValid); //actualiza la property asociada
         showError(isValid, emailField, emailError); //muestra o esconde el mensaje de error
    }
     
     private void checkPassword() {
         String password = passwordField.getText();
-        boolean isValid = password.matches("^(?=.*[0-9])(?=.*[a-zA-Z]).{8,15}$");
+        boolean isValid = User.checkPassword(password);
         validPassword.set(isValid); //actualiza la property asociada
         showError(isValid, passwordField, passwordError); //muestra o esconde el mensaje de error
     }
@@ -200,9 +219,16 @@ public class FXMLRegisterController implements Initializable {
     
     private void checkDate(){
         LocalDate value = dateField.getValue();
-        boolean isValid = value.isBefore(LocalDate.now().minus(16, YEARS));
+        boolean isValid = (value != null) && User.isOlderThan(value, 12);
         validDate.set(isValid);
         showError(isValid, dateField, dateError);
+    }
+    
+    private void checkNickname() {
+    String nick = nicknameField.getText();
+    boolean isValid = User.checkNickName(nick);
+    validNickname.set(isValid);
+    showError(isValid, nicknameField, nicknameError);
     }
     
     @FXML
