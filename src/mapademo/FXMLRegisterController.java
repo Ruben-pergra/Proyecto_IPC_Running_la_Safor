@@ -101,6 +101,7 @@ public class FXMLRegisterController implements Initializable {
         validNickname = new SimpleBooleanProperty();
         validNickname.setValue(Boolean.FALSE);
         emailError.setVisible(false);
+        nicknameError.setVisible(false);
 
         //Check values when user leaves edits
         emailField.focusedProperty().addListener((observable, oldValue, newValue)->{
@@ -172,7 +173,15 @@ public class FXMLRegisterController implements Initializable {
         
         //Nickname//
         nicknameField.focusedProperty().addListener((obs, oldV, newV) -> {
-            if (!newV) checkNickname();
+            if(!newV){ //focus lost
+            checkNickname();
+            if (!validNickname.get()) {
+                if (listenerNickname == null) {
+                    listenerNickname = (a, b, c) -> checkEmail();
+                    nicknameField.textProperty().addListener(listenerNickname);
+                    }
+                }
+            }
         });
         
         // Boton aceptar //
@@ -242,5 +251,6 @@ public class FXMLRegisterController implements Initializable {
         validPassword.setValue(Boolean.FALSE);
         confirmPasswords.setValue(Boolean.FALSE);
         validDate.setValue(Boolean.FALSE);
+        validNickname.setValue(Boolean.FALSE);
     }
 }
