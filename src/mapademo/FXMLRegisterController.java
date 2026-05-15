@@ -28,8 +28,9 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 
-import model.User;
-import model.SportActivityApp;
+
+import upv.ipc.sportlib.User;
+import upv.ipc.sportlib.SportActivityApp;
 
 public class FXMLRegisterController implements Initializable {
     // Email //
