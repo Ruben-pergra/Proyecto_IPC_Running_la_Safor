@@ -125,7 +125,6 @@ public class FXMLDocumentController implements Initializable {
     // =========================================================
 
     /** Lista lateral que muestra todos los POIs añadidos al mapa. */
-    @FXML
     private ListView<Poi> map_listview;
 
     /** ScrollPane que envuelve el mapa y permite desplazarlo. */
@@ -137,7 +136,6 @@ public class FXMLDocumentController implements Initializable {
      * Rango: [0.5 – 1.5]. Valor inicial: 1.0 (sin zoom).
      * Cada cambio de valor llama al método zoom().
      */
-    @FXML
     private Slider zoom_slider;
 
     /**
@@ -166,7 +164,6 @@ public class FXMLDocumentController implements Initializable {
      *
      * @param event evento de acción del botón
      */
-    @FXML
     void zoomIn(ActionEvent event) {
         double sliderVal = zoom_slider.getValue();
         zoom_slider.setValue(sliderVal + 0.1);
@@ -177,7 +174,6 @@ public class FXMLDocumentController implements Initializable {
      *
      * @param event evento de acción del botón
      */
-    @FXML
     void zoomOut(ActionEvent event) {
         double sliderVal = zoom_slider.getValue();
         zoom_slider.setValue(sliderVal - 0.1);
@@ -235,7 +231,6 @@ public class FXMLDocumentController implements Initializable {
      *
      * @param event evento de ratón sobre el ListView
      */
-    @FXML
     void listClicked(MouseEvent event) {
         // Obtenemos el POI seleccionado; si no hay ninguno, salimos
         Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
@@ -483,7 +478,6 @@ public class FXMLDocumentController implements Initializable {
      *
      * @param event evento de acción del menú
      */
-    @FXML
     private void about(ActionEvent event) {
         Alert mensaje = new Alert(Alert.AlertType.INFORMATION);
 
@@ -581,7 +575,6 @@ public class FXMLDocumentController implements Initializable {
      * @param event evento de acción del menú
      * @throws IOException si hay un problema al obtener la ruta canónica
      */
-    @FXML
     private void cambiarMapa(ActionEvent event) throws IOException {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(".")); // Empezamos en el directorio del proyecto
