@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLRegisterController">
+<VBox fx:id="rootVbox" onMouseClicked="#actualizarRootVbox" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLRegisterController">
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #0081B4;">
          <children>
@@ -59,7 +59,7 @@
                      <VBox.margin>
                         <Insets />
                      </VBox.margin></Label>
-                  <ImageView fitHeight="50.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="avatarImageView" fitHeight="50.0" fitWidth="100.0" onMouseClicked="#pickAvatar" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: HAND;">
                      <image>
                         <Image url="@../resources/icono_avatar.jpg" />
                      </image>
@@ -71,14 +71,14 @@
                <children>
                   <Label text="Nickname" textFill="#0303eb" />
                   <TextField fx:id="nicknameField" />
-                  <Label fx:id="nicknameError" text="Incorrect Nickname" textFill="#e30b0b" />
+                  <Label fx:id="nicknameError" text="Entre 6 y 15 caracteres,letras,digitos,guiones" textFill="#e30b0b" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
                <children>
                   <Label text="Email" textFill="#0303eb" />
                   <TextField fx:id="emailField" />
-                  <Label fx:id="emailError" text="Incorrect Email" textFill="#e30b0b" />
+                  <Label fx:id="emailError" text="Del tipo usuario@dominio" textFill="#e30b0b" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
@@ -89,7 +89,7 @@
                         <Insets right="300.0" />
                      </VBox.margin>
                   </PasswordField>
-                  <Label fx:id="passwordError" text="It must be a combination of 8 to 15 numbers or letters, without blank spaces" textFill="#f20c0c" />
+                  <Label fx:id="passwordError" text="Entre 8 y 20 caracteres, minimo una mayuscula, minuscula y simbolo" textFill="#f20c0c" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
@@ -100,7 +100,7 @@
                         <Insets right="80.0" />
                      </VBox.margin>
                   </PasswordField>
-                  <Label fx:id="passwordConfirmError" text="Password dont match" textFill="#dd0808" />
+                  <Label fx:id="passwordConfirmError" text="Las contraseñas no coinciden" textFill="#dd0808" />
                </children>
             </VBox>
             <Separator prefWidth="200.0" GridPane.rowIndex="4" />
@@ -108,7 +108,7 @@
                <children>
                   <Label text="Birthdate" textFill="#1d06ee" />
                   <DatePicker fx:id="dateField" />
-                  <Label fx:id="dateError" text="User must be 16 years old" textFill="#da0606" />
+                  <Label fx:id="dateError" text="Debe ser mayor de 12 años" textFill="#da0606" />
                </children>
             </VBox>
             <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">

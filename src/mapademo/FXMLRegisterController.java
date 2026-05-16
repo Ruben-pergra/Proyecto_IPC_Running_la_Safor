@@ -21,12 +21,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.DatePicker;
+import javafx.scene.layout.VBox;
 import java.time.LocalDate;
-import static java.time.temporal.ChronoUnit.YEARS;
 import javafx.scene.control.Button;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
+import java.io.File;
 
 
 import upv.ipc.sportlib.User;
@@ -85,6 +90,16 @@ public class FXMLRegisterController implements Initializable {
     
     private BooleanProperty validNickname;
     private ChangeListener<String> listenerNickname;
+    
+    //Avatar//
+    @FXML
+    private ImageView avatarImageView;
+    //Para guardar la ruta q irá luego a la librería
+    private String selectedAvatarPath = "";
+    
+    //RootVbox//
+    @FXML 
+    private VBox rootVbox;
     
     private void showError(boolean isValid, Node field, Node errorMessage){
         errorMessage.setVisible(!isValid);
@@ -177,7 +192,7 @@ public class FXMLRegisterController implements Initializable {
             checkNickname();
             if (!validNickname.get()) {
                 if (listenerNickname == null) {
-                    listenerNickname = (a, b, c) -> checkEmail();
+                    listenerNickname = (a, b, c) -> checkNickname();
                     nicknameField.textProperty().addListener(listenerNickname);
                     }
                 }
@@ -243,14 +258,47 @@ public class FXMLRegisterController implements Initializable {
     
     @FXML
     private void handleBAcceptOnAction(ActionEvent event) {
-        emailField.clear();
-        passwordField.clear();
-        passwordConfirmField.clear();
-        dateField.setValue(null);
-        validEmail.setValue(Boolean.FALSE);
-        validPassword.setValue(Boolean.FALSE);
-        confirmPasswords.setValue(Boolean.FALSE);
-        validDate.setValue(Boolean.FALSE);
-        validNickname.setValue(Boolean.FALSE);
+        //Obtenemos la instancia única para conectar con la base de datos
+        SportActivityApp app = SportActivityApp.getInstance();
+        boolean success = app.registerUser(
+        nicknameField.getText(),
+        emailField.getText(),
+        passwordField.getText(),
+        dateField.getValue(),
+        selectedAvatarPath
+        );
+        if (success) {
+            bAccept.getScene().getWindow().hide();
+        } else{
+            nicknameError.setText("El nickname '" + nicknameField.getText() + "' ya está en uso.");
+            showError(false, nicknameField, nicknameError);
+            nicknameField.requestFocus();
+        }
+    
+        
+    }
+    
+    @FXML
+    private void pickAvatar(MouseEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Seleccionar Imagen de Perfil");
+
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Imágenes", "*.png", "*.jpg", "*.jpeg", "*.gif")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(avatarImageView.getScene().getWindow());
+
+        if (selectedFile != null) {
+            selectedAvatarPath = selectedFile.getAbsolutePath();
+
+            Image image = new Image(selectedFile.toURI().toString());
+            avatarImageView.setImage(image);
+        }
+    }
+    
+    @FXML
+    private void actualizarRootVbox(MouseEvent event) {
+        rootVbox.requestFocus(); 
     }
 }
