@@ -19,11 +19,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="rootVbox" onMouseClicked="#actualizarRootVbox" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLRegisterController">
+<VBox fx:id="rootVbox" onMouseClicked="#actualizarRootVbox" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLEditarPerfilController">
    <children>
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #0081B4;">
          <children>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Register form">
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Editar perfil">
                <font>
                   <Font name="Arial Rounded MT Bold" size="36.0" />
                </font>
@@ -74,8 +74,10 @@
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
                   <Label text="Nickname" textFill="#0303eb" />
-                  <TextField fx:id="nicknameField" />
-                  <Label fx:id="nicknameError" text="Entre 6 y 15 caracteres,letras,digitos,guiones" textFill="#e30b0b" />
+                  <TextField fx:id="nicknameField" editable="false">
+                     <cursor>
+                        <Cursor fx:constant="DISAPPEAR" />
+                     </cursor></TextField>
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
@@ -117,7 +119,7 @@
             </VBox>
             <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                <children>
-                  <Button fx:id="bAccept" mnemonicParsing="false" onAction="#handleBAcceptOnAction" style="-fx-background-color: #0081B4;" text="Register" textFill="WHITE" />
+                  <Button fx:id="bAccept" mnemonicParsing="false" onAction="#handleBAcceptOnAction" style="-fx-background-color: #0081B4;" text="Aceptar" textFill="WHITE" />
                   <Button fx:id="bCancel" mnemonicParsing="false" style="-fx-background-color: #0081B4;" text="Cancel" textAlignment="RIGHT" textFill="WHITE">
                      <HBox.margin>
                         <Insets left="10.0" />

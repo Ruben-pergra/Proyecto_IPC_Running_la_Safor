@@ -37,7 +37,7 @@ import java.io.File;
 import upv.ipc.sportlib.User;
 import upv.ipc.sportlib.SportActivityApp;
 
-public class FXMLRegisterController implements Initializable {
+public class FXMLEditarPerfilController implements Initializable {
     // Email //
     @FXML
     private TextField emailField;
@@ -85,12 +85,7 @@ public class FXMLRegisterController implements Initializable {
     // Nickname//
     @FXML
     private TextField nicknameField;
-    @FXML
-    private Label nicknameError;
-    
-    private BooleanProperty validNickname;
-    private ChangeListener<String> listenerNickname;
-    
+        
     //Avatar//
     @FXML
     private ImageView avatarImageView;
@@ -112,11 +107,8 @@ public class FXMLRegisterController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // Email //
         validEmail = new SimpleBooleanProperty();
-        validEmail.setValue(Boolean.FALSE);
-        validNickname = new SimpleBooleanProperty();
-        validNickname.setValue(Boolean.FALSE);
+        validEmail.setValue(Boolean.TRUE);
         emailError.setVisible(false);
-        nicknameError.setVisible(false);
 
         //Check values when user leaves edits
         emailField.focusedProperty().addListener((observable, oldValue, newValue)->{
@@ -132,7 +124,7 @@ public class FXMLRegisterController implements Initializable {
         });
         
         // Contraseña //
-        validPassword = new SimpleBooleanProperty(false); 
+        validPassword = new SimpleBooleanProperty(true); 
         passwordError.setVisible(false);
 
         passwordField.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -149,7 +141,7 @@ public class FXMLRegisterController implements Initializable {
         });
         
         // Contraseña_2 //
-        confirmPasswords = new SimpleBooleanProperty(false);
+        confirmPasswords = new SimpleBooleanProperty(true);
         passwordConfirmError.setVisible(false);
 
         passwordConfirmField.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -170,7 +162,7 @@ public class FXMLRegisterController implements Initializable {
         });
         
         // Fecha //
-        validDate = new SimpleBooleanProperty(false);
+        validDate = new SimpleBooleanProperty(true);
         dateError.setVisible(false);
 
         dateField.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -187,27 +179,15 @@ public class FXMLRegisterController implements Initializable {
         });
         
         //Nickname//
-        nicknameField.focusedProperty().addListener((obs, oldV, newV) -> {
-            if(!newV){ //focus lost
-            checkNickname();
-            if (!validNickname.get()) {
-                if (listenerNickname == null) {
-                    listenerNickname = (a, b, c) -> checkNickname();
-                    nicknameField.textProperty().addListener(listenerNickname);
-                    }
-                }
-            }
-        });
-        
-        // Boton aceptar //
-        BooleanBinding validFields = Bindings.and(validEmail,validNickname)
-                .and(confirmPasswords)
-                .and(validDate)
-                .and (validPassword);
- 
-        bAccept.disableProperty().bind(
-                        Bindings.not(validFields)
-                   );
+        User currentUser = SportActivityApp.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            nicknameField.setText(currentUser.getNickName());
+            emailField.setText(currentUser.getEmail());
+            passwordField.setText(currentUser.getPassword());
+            passwordConfirmField.setText(currentUser.getPassword());
+            dateField.setValue(currentUser.getBirthDate());
+            avatarImageView.setImage(currentUser.getAvatar());
+        }
         
         // Boton cancelar //
         bCancel.setOnAction( (event)->{
@@ -249,34 +229,22 @@ public class FXMLRegisterController implements Initializable {
         showError(isValid, dateField, dateError);
     }
     
-    private void checkNickname() {
-    String nick = nicknameField.getText();
-    boolean isValid = User.checkNickName(nick);
-    validNickname.set(isValid);
-    showError(isValid, nicknameField, nicknameError);
-    }
-    
     @FXML
     private void handleBAcceptOnAction(ActionEvent event) {
-        //Obtenemos la instancia única para conectar con la base de datos
-        SportActivityApp app = SportActivityApp.getInstance();
-        boolean success = app.registerUser(
-        nicknameField.getText(),
-        emailField.getText(),
-        passwordField.getText(),
-        dateField.getValue(),
-        selectedAvatarPath
-        );
-        if (success) {
-            bAccept.getScene().getWindow().hide();
-            app.login(nicknameField.getText(), passwordField.getText());
-        } else{
-            nicknameError.setText("El nickname '" + nicknameField.getText() + "' ya está en uso.");
-            showError(false, nicknameField, nicknameError);
-            nicknameField.requestFocus();
+        if (validEmail.get() && validPassword.get() && confirmPasswords.get() && validDate.get()) {
+            User currentUser = SportActivityApp.getInstance().getCurrentUser();
+
+            if (currentUser != null) {
+                // Modificamos directamente los atributos del usuario en la base de datos
+                currentUser.setEmail(emailField.getText());
+                currentUser.setPassword(passwordField.getText());
+                currentUser.setBirthDate(dateField.getValue());
+                currentUser.setAvatarPath(selectedAvatarPath);
+
+                // Cerramos la ventana al guardar los cambios con éxito
+                bAccept.getScene().getWindow().hide();
+            }
         }
-    
-        
     }
     
     @FXML
