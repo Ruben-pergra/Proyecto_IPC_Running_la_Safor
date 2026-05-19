@@ -184,7 +184,7 @@
                   <Insets left="250.0" />
                </HBox.margin>
             </Button>
-            <Button contentDisplay="RIGHT" layoutX="524.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="Ayuda" />
+            <Button contentDisplay="RIGHT" layoutX="524.0" layoutY="10.0" mnemonicParsing="false" onAction="#mostrarAyuda" prefHeight="26.0" prefWidth="80.0" text="Ayuda" />
             <MenuButton mnemonicParsing="false" text="Usuario">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#OnEditarPerfil" text="Editar Perfil" />

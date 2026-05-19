@@ -186,7 +186,16 @@ public class FXMLEditarPerfilController implements Initializable {
             passwordField.setText(currentUser.getPassword());
             passwordConfirmField.setText(currentUser.getPassword());
             dateField.setValue(currentUser.getBirthDate());
-            avatarImageView.setImage(currentUser.getAvatar());
+            String rutaAvatarBDD = currentUser.getAvatarPath();
+            if (rutaAvatarBDD != null && !rutaAvatarBDD.isEmpty()) {
+                File archivoAvatar = new File(rutaAvatarBDD);
+                if (archivoAvatar.exists()) {
+                    selectedAvatarPath = rutaAvatarBDD;
+                    
+                    Image imagenVisual = new Image(archivoAvatar.toURI().toString());
+                    avatarImageView.setImage(imagenVisual);
+                }
+            }
         }
         
         // Boton cancelar //
@@ -216,8 +225,11 @@ public class FXMLEditarPerfilController implements Initializable {
         showError(match, passwordConfirmField, passwordConfirmError);
 
         if (!match) {
-            passwordField.clear();
-            passwordConfirmField.clear();
+            User currentUser = SportActivityApp.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                passwordField.setText(currentUser.getPassword());
+                passwordConfirmField.setText(currentUser.getPassword());
+            }
             passwordField.requestFocus();
         }
     }
