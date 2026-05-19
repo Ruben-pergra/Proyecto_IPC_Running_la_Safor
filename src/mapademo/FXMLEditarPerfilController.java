@@ -247,13 +247,13 @@ public class FXMLEditarPerfilController implements Initializable {
             User currentUser = SportActivityApp.getInstance().getCurrentUser();
 
             if (currentUser != null) {
-                // Modificamos directamente los atributos del usuario en la base de datos
-                currentUser.setEmail(emailField.getText());
-                currentUser.setPassword(passwordField.getText());
-                currentUser.setBirthDate(dateField.getValue());
-                currentUser.setAvatarPath(selectedAvatarPath);
+                SportActivityApp.getInstance().updateCurrentUser(
+                        emailField.getText(), 
+                        passwordField.getText(), 
+                        dateField.getValue(), 
+                        selectedAvatarPath
+                    );
 
-                // Cerramos la ventana al guardar los cambios con éxito
                 bAccept.getScene().getWindow().hide();
             }
         }

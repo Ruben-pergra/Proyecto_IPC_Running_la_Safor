@@ -66,9 +66,23 @@ public class FXMLInicioController implements Initializable {
     
     @FXML
     private void onIniSesion(ActionEvent event) {
-        // De momento nada, tal y como has pedido. 
-        // Solo un aviso por consola para que veas que el botón funciona al pulsarlo.
-        System.out.println("Botón de Iniciar Sesión pulsado. (Pendiente de programar)");
+        try {
+            // Cargamos el FXML del registro
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLIniSesion.fxml"));
+            Parent root = loader.load();
+
+            // Creamos una nueva ventana (Stage)
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Inicio de seión - Running la Safor");
+
+            // Hacerla modal para que no se pueda interactuar con la principal hasta cerrar esta
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+            stage.show();
+        } catch (IOException e) {
+            System.err.println("Error al cargar el formulario de registro: " + e.getMessage());
+        }
     }
     
 }
