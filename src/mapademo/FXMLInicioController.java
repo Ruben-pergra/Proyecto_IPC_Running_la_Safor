@@ -47,17 +47,17 @@ public class FXMLInicioController implements Initializable {
             stage.showAndWait();
             
             if (SportActivityApp.getInstance().getCurrentUser() != null) {
-            ((javafx.scene.Node)(event.getSource())).getScene().getWindow().hide();
-            // Cargamos el FXML del registro
-            FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
-            Parent mainRoot = mainLoader.load();
+                ((javafx.scene.Node)(event.getSource())).getScene().getWindow().hide();
+                // Cargamos el FXML del registro
+                FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
+                Parent mainRoot = mainLoader.load();
 
-            // Creamos una nueva ventana (Stage)
-            Stage mainStage = new Stage();
-            mainStage.setScene(new Scene(mainRoot));
-            mainStage.setTitle("Aplicación principal - Running la Safor");
+                // Creamos una nueva ventana (Stage)
+                Stage mainStage = new Stage();
+                mainStage.setScene(new Scene(mainRoot));
+                mainStage.setTitle("Aplicación principal - Running la Safor");
 
-            mainStage.show();
+                mainStage.show();
             }
         } catch (IOException e) {
             System.err.println("Error al cargar el formulario de registro: " + e.getMessage());
@@ -79,7 +79,20 @@ public class FXMLInicioController implements Initializable {
             // Hacerla modal para que no se pueda interactuar con la principal hasta cerrar esta
             stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
 
-            stage.show();
+            stage.showAndWait();
+            if (SportActivityApp.getInstance().getCurrentUser() != null) {
+                ((javafx.scene.Node)(event.getSource())).getScene().getWindow().hide();
+                // Cargamos el FXML del registro
+                FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
+                Parent mainRoot = mainLoader.load();
+
+                // Creamos una nueva ventana (Stage)
+                Stage mainStage = new Stage();
+                mainStage.setScene(new Scene(mainRoot));
+                mainStage.setTitle("Aplicación principal - Running la Safor");
+
+                mainStage.show();
+            }
         } catch (IOException e) {
             System.err.println("Error al cargar el formulario de registro: " + e.getMessage());
         }

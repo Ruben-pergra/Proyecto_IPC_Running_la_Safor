@@ -187,10 +187,9 @@
             <MenuButton mnemonicParsing="false" text="Usuario">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#OnEditarPerfil" text="Editar Perfil" />
-                <MenuItem mnemonicParsing="false" text="Cerrar Sesion" />
+                <MenuItem mnemonicParsing="false" onAction="#OnCerrarSesion" text="Cerrar Sesion" />
               </items>
             </MenuButton>
-            <Button contentDisplay="RIGHT" layoutX="561.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="Salir" />
          </children>
       </HBox>
    </top>
