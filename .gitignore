@@ -13,3 +13,4 @@ dist/
 # Logs
 *.log
 
+nbproject/build-impl.xml nbproject/build-impl.xml nbproject/project.properties nbproject/project.xml nbproject/private/sportactivity.db build/ dist/ *.db .DS_Store
