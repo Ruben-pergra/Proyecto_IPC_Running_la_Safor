@@ -37,8 +37,8 @@
                               <Label alignment="CENTER" prefHeight="18.0" prefWidth="242.0" text="ACTIVIDADES" />
                               <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Importar GPX" />
-                                    <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="115.0" text="Borrar GPX" />
+                                    <Button mnemonicParsing="false" onAction="#onImportarGpx" prefHeight="26.0" prefWidth="120.0" text="Importar GPX" />
+                                    <Button mnemonicParsing="false" onAction="#onBorrarGpx" prefHeight="26.0" prefWidth="115.0" text="Borrar GPX" />
                                  </children>
                               </HBox>
                               <ListView prefHeight="350.0" prefWidth="238.0" VBox.vgrow="ALWAYS" />
@@ -120,7 +120,7 @@
                         </VBox>
                      </children>
                   </VBox>
-                  <VBox>
+                  <VBox fx:id="boxVistas">
                      <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                            <children>
@@ -177,7 +177,7 @@
                   <Insets left="30.0" />
                </HBox.margin>
             </Button>
-            <Button contentDisplay="RIGHT" layoutX="721.0" layoutY="10.0" mnemonicParsing="false" prefWidth="80.0" text="Sesiones" />
+            <Button contentDisplay="RIGHT" layoutX="721.0" layoutY="10.0" mnemonicParsing="false" onAction="#onClickSesiones" prefWidth="80.0" text="Sesiones" />
             <Button contentDisplay="RIGHT" layoutX="169.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="Mapas">
                <HBox.margin>
                   <Insets left="250.0" />
