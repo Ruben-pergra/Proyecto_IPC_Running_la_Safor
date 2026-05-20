@@ -10,6 +10,7 @@
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -40,9 +41,15 @@
                                  </children>
                               </HBox>
                               <ListView prefHeight="350.0" prefWidth="238.0" VBox.vgrow="ALWAYS" />
+                              <VBox alignment="TOP_CENTER" prefHeight="288.0" prefWidth="235.0">
+                                 <children>
+                                    <Label alignment="TOP_CENTER" text="MAPAS" />
+                                    <ListView prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="282.0" prefWidth="238.0" spacing="8.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="254.0" prefWidth="235.0" spacing="8.0">
                            <padding>
                               <Insets top="15.0" />
                            </padding>
@@ -120,6 +127,22 @@
                   </VBox>
                   <VBox>
                      <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Zoom" />
+                              <Button mnemonicParsing="false" onAction="#zoomOut" text="-">
+                                 <HBox.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Slider fx:id="zoom_slider" max="50.0" maxWidth="200.0" min="10.0" />
+                              <Button mnemonicParsing="false" onAction="#zoomIn" text="+">
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
                         <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" onMouseMoved="#showPosition" pannable="true" prefHeight="554.0" prefWidth="482.0" vbarPolicy="ALWAYS">
                            <content>
                               <Pane>
@@ -154,26 +177,22 @@
             <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
          </BorderPane.margin>
          <children>
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="62.0" text="Entrar" />
-            <Button layoutX="788.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="80.0" text="Actividades">
+            <Button contentDisplay="RIGHT" layoutX="721.0" layoutY="10.0" mnemonicParsing="false" prefWidth="80.0" text="Sesiones">
                <HBox.margin>
-                  <Insets left="30.0" />
-               </HBox.margin>
-            </Button>
-            <Button contentDisplay="RIGHT" layoutX="721.0" layoutY="10.0" mnemonicParsing="false" prefWidth="80.0" text="Sesiones" />
+                  <Insets left="20.0" />
+               </HBox.margin></Button>
             <Button contentDisplay="RIGHT" layoutX="169.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="Mapas">
                <HBox.margin>
                   <Insets left="250.0" />
                </HBox.margin>
             </Button>
-            <Button contentDisplay="RIGHT" layoutX="524.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="Ayuda" />
+            <Button contentDisplay="RIGHT" layoutX="524.0" layoutY="10.0" mnemonicParsing="false" onAction="#mostrarAyuda" prefHeight="26.0" prefWidth="80.0" text="Ayuda" />
             <MenuButton mnemonicParsing="false" text="Usuario">
               <items>
-                <MenuItem mnemonicParsing="false" text="Ediat Perfil" />
-                <MenuItem mnemonicParsing="false" text="Cerrar Sesion" />
+                <MenuItem mnemonicParsing="false" onAction="#OnEditarPerfil" text="Editar Perfil" />
+                <MenuItem mnemonicParsing="false" onAction="#OnCerrarSesion" text="Cerrar Sesion" />
               </items>
             </MenuButton>
-            <Button contentDisplay="RIGHT" layoutX="561.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="Salir" />
          </children>
       </HBox>
    </top>

@@ -29,6 +29,7 @@ package mapademo;
 
 import java.io.File;
 import java.io.IOException;
+import javafx.fxml.FXMLLoader;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -66,6 +67,9 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
 
 /**
  * Controlador principal de la aplicación de mapa con POIs.
@@ -136,6 +140,7 @@ public class FXMLDocumentController implements Initializable {
      * Rango: [0.5 – 1.5]. Valor inicial: 1.0 (sin zoom).
      * Cada cambio de valor llama al método zoom().
      */
+    @FXML
     private Slider zoom_slider;
 
     /**
@@ -164,6 +169,7 @@ public class FXMLDocumentController implements Initializable {
      *
      * @param event evento de acción del botón
      */
+    @FXML
     void zoomIn(ActionEvent event) {
         double sliderVal = zoom_slider.getValue();
         zoom_slider.setValue(sliderVal + 0.1);
@@ -174,6 +180,7 @@ public class FXMLDocumentController implements Initializable {
      *
      * @param event evento de acción del botón
      */
+    @FXML
     void zoomOut(ActionEvent event) {
         double sliderVal = zoom_slider.getValue();
         zoom_slider.setValue(sliderVal - 0.1);
@@ -612,6 +619,63 @@ public class FXMLDocumentController implements Initializable {
         mapPane.getChildren().add(circle); // Se añade sobre el mapa como cualquier nodo
     }
 
+    // =========================================================
+    //  Aquí empieza el código del alumno
+    // =========================================================
+    
+    //Función para darle acción al EditarPErfil
+    @FXML
+    private void OnEditarPerfil(ActionEvent event) {
+        try {
+            // Cargamos el FXML del registro
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLEditarPerfil.fxml"));
+            Parent root = loader.load();
 
+            // Creamos una nueva ventana (Stage)
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Editar Perfil - Running la Safor");
+
+            // Hacerla modal para que no se pueda interactuar con la principal hasta cerrar esta
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+            stage.show();
+        } catch (IOException e) {
+            System.err.println("Error al cargar el formulario de registro: " + e.getMessage());
+        }
+    }
+    
+    @FXML
+    private void mostrarAyuda(ActionEvent event) {
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        
+        alerta.setTitle("Ayuda general");
+        alerta.setHeaderText("Funciones de la aplicacion"); 
+        
+        alerta.setContentText("• Boton sesiones te lleva a las hechas por el usuario \n"
+                            + "• Para importar actividades ha de ser formato .gpx \n"
+                            + "• La pestaña mapas te permite crear nuevos propios tuyos");
+        
+        alerta.showAndWait();
+    }
+    
+    @FXML
+    private void OnCerrarSesion(ActionEvent event) {
+        try {
+            mousePosition.getScene().getWindow().hide();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLInicio.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setTitle("Bienvenido - Running la Safor");
+            stage.show();
+
+        } catch (Exception e) {
+            System.err.println("Error al intentar volver a la pantalla de inicio:");
+            e.printStackTrace();
+        }
+    }
 
 }
