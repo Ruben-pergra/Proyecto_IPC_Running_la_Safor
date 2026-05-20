@@ -37,8 +37,8 @@
                               <Label alignment="CENTER" prefHeight="18.0" prefWidth="242.0" text="ACTIVIDADES" />
                               <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                  <children>
-                                    <Button mnemonicParsing="false" onAction="#onImportarGpx" prefHeight="26.0" prefWidth="120.0" text="Importar GPX" />
-                                    <Button mnemonicParsing="false" onAction="#onBorrarGpx" prefHeight="26.0" prefWidth="115.0" text="Borrar GPX" />
+                                    <Button fx:id="bImportarGpx" mnemonicParsing="false" onAction="#onImportarGpx" prefHeight="26.0" prefWidth="120.0" text="Importar GPX" />
+                                    <Button fx:id="bBorrarGpx" mnemonicParsing="false" onAction="#onBorrarGpx" prefHeight="26.0" prefWidth="115.0" text="Borrar GPX" />
                                  </children>
                               </HBox>
                               <ListView prefHeight="350.0" prefWidth="238.0" VBox.vgrow="ALWAYS" />

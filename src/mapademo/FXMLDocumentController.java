@@ -69,8 +69,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.Button;
 import upv.ipc.sportlib.SportActivityApp;
+import upv.ipc.sportlib.Activity;
 
 /**
  * Controlador principal de la aplicación de mapa con POIs.
@@ -166,6 +167,10 @@ public class FXMLDocumentController implements Initializable {
     private Pane paneVistas;
     @FXML
     private VBox boxVistas;
+    @FXML
+    private Button bImportarGpx;
+    @FXML
+    private Button bBorrarGpx;
 
     // =========================================================
     //  MANEJADORES DE ZOOM
@@ -191,10 +196,8 @@ public class FXMLDocumentController implements Initializable {
         double sliderVal = zoom_slider.getValue();
         zoom_slider.setValue(sliderVal - 0.1);
     }
-    
-    
-    private SportActivityApp app = SportActivityApp.getInstance();
 
+    private SportActivityApp app = SportActivityApp.getInstance();
 
     /**
      * Aplica el factor de escala al {@code zoomGroup}.
@@ -690,8 +693,7 @@ public class FXMLDocumentController implements Initializable {
             controller.onEnter();
             boxVistas.getChildren().clear();
             boxVistas.getChildren().add(vista);
-            
-            
+
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -701,10 +703,42 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void onImportarGpx(ActionEvent event) {
+
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Seleccionar fichero GPX");
+        fc.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Ficheros GPX", "*.gpx")
+        );
+        File gpxFile = fc.showOpenDialog(bImportarGpx.getScene().getWindow());
+
+        if (gpxFile != null) {
+
+            Activity activity = app.importActivity(gpxFile);
+            if (activity != null) {
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("VuestroMapa.fxml")
+                );
+                
+                try{
+                    javafx.scene.Node vista = loader.load();
+                    //VuestroMapaController controller = loader.getController();
+                    //controller.cargarActividad(activity);
+                    boxVistas.getChildren().clear();
+                    boxVistas.getChildren().add(vista);
+                
+                }catch(Exception e){
+                
+                    e.printStackTrace();
+                }
+                
+            }
+        }
+
     }
 
     @FXML
-    private void onBorrarGpx(ActionEvent event) {
+    private void onBorrarGpx(ActionEvent event
+    ) {
     }
 
 }
