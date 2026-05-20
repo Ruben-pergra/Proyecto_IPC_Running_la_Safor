@@ -26,6 +26,10 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 
+import java.io.IOException;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+
 
 /**
  * FXML Controller class
@@ -74,6 +78,8 @@ public class FXMLMapaController implements Initializable {
     // Lista observable que alimenta la tabla
     private final ObservableList<MapRegion> mapaList =
             FXCollections.observableArrayList();
+    @FXML
+    private Button backButton;
 
 
     /**
@@ -243,6 +249,26 @@ public class FXMLMapaController implements Initializable {
         a.setHeaderText(null);
         a.setContentText(mensaje);
         a.showAndWait();
+    }
+
+    @FXML
+    private void BackButtonAction(ActionEvent event) {
+        try {
+        FXMLLoader loader = new FXMLLoader(
+            getClass().getResource("/mapademo/FXMLDocument.fxml")
+        );
+        Parent vistaPrincipal = loader.load();
+        
+        backButton.getScene().setRoot(vistaPrincipal);
+        
+    } catch (IOException e) {
+        e.printStackTrace();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText("No se pudo volver a la vista principal.");
+        alert.showAndWait();
+    }
     }
     
 }

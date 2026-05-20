@@ -41,6 +41,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
@@ -66,6 +67,8 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 
 /**
  * Controlador principal de la aplicación de mapa con POIs.
@@ -155,6 +158,8 @@ public class FXMLDocumentController implements Initializable {
     private Label mousePosition;
     @FXML
     private SplitPane splitPane;
+    @FXML
+    private Button mapsButton;
  
 
     // =========================================================
@@ -483,7 +488,6 @@ public class FXMLDocumentController implements Initializable {
      *
      * @param event evento de acción del menú
      */
-    @FXML
     private void about(ActionEvent event) {
         Alert mensaje = new Alert(Alert.AlertType.INFORMATION);
 
@@ -581,7 +585,6 @@ public class FXMLDocumentController implements Initializable {
      * @param event evento de acción del menú
      * @throws IOException si hay un problema al obtener la ruta canónica
      */
-    @FXML
     private void cambiarMapa(ActionEvent event) throws IOException {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(".")); // Empezamos en el directorio del proyecto
@@ -617,6 +620,40 @@ public class FXMLDocumentController implements Initializable {
         circle.setCenterX(x);
         circle.setCenterY(y);
         mapPane.getChildren().add(circle); // Se añade sobre el mapa como cualquier nodo
+    }
+
+    @FXML
+    private void mostrarAyuda(ActionEvent event) {
+    }
+
+    @FXML
+    private void OnEditarPerfil(ActionEvent event) {
+    }
+
+    @FXML
+    private void OnCerrarSesion(ActionEvent event) {
+    }
+
+    @FXML
+    private void onMapsButton(ActionEvent event) {
+            try {
+        FXMLLoader loader = new FXMLLoader(
+            getClass().getResource("/mapademo/FXMLMapa.fxml")
+        );
+        Parent vistaMapas = loader.load();
+        
+        // Reemplaza el contenido del splitPane por la vista de mapas
+        splitPane.getScene().setRoot(vistaMapas);
+        
+    } catch (IOException e) {
+        e.printStackTrace();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText("No se pudo cargar la vista de mapas.");
+        alert.showAndWait();
+    }
+        
     }
 
 

@@ -18,6 +18,11 @@
    <top>
       <HBox alignment="CENTER_RIGHT" prefHeight="58.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
+            <Button fx:id="backButton" mnemonicParsing="false" onAction="#BackButtonAction" text="Volver">
+               <HBox.margin>
+                  <Insets right="350.0" />
+               </HBox.margin>
+            </Button>
             <Button fx:id="addButton" mnemonicParsing="false" onAction="#ddAction" text="Añadir">
                <opaqueInsets>
                   <Insets />
