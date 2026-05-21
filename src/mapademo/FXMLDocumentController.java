@@ -72,6 +72,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import upv.ipc.sportlib.SportActivityApp;
 import upv.ipc.sportlib.Activity;
+import upv.ipc.sportlib.MapRegion;
+import upv.ipc.sportlib.MapProjection;
+import upv.ipc.sportlib.TrackPoint;
 
 /**
  * Controlador principal de la aplicación de mapa con POIs.
@@ -714,26 +717,19 @@ public class FXMLDocumentController implements Initializable {
         if (gpxFile != null) {
 
             Activity activity = app.importActivity(gpxFile);
+            
             if (activity != null) {
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("VuestroMapa.fxml")
-                );
                 
-                try{
-                    javafx.scene.Node vista = loader.load();
-                    //VuestroMapaController controller = loader.getController();
-                    //controller.cargarActividad(activity);
-                    boxVistas.getChildren().clear();
-                    boxVistas.getChildren().add(vista);
-                
-                }catch(Exception e){
-                
-                    e.printStackTrace();
-                }
-                
-            }
-        }
+                MapRegion region = activity.getSuggestedMap();
 
+                buildMap(new File(region.getImagePath()));
+
+                MapProjection mapa = new MapProjection(
+                        region, mapPane.getWidth(), mapPane.getHeight());
+
+            }
+
+        }
     }
 
     @FXML
