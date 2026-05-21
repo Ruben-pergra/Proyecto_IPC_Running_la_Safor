@@ -44,7 +44,7 @@
                               <VBox alignment="TOP_CENTER" prefHeight="288.0" prefWidth="235.0">
                                  <children>
                                     <Label alignment="TOP_CENTER" text="MAPAS" />
-                                    <ListView fx:id="map_listview" prefHeight="200.0" prefWidth="200.0" />
+                                    <ListView fx:id="mapa_listview" prefHeight="200.0" prefWidth="200.0" />
                                  </children>
                               </VBox>
                            </children>
@@ -156,14 +156,24 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <LineChart prefHeight="212.0" prefWidth="606.0">
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                        </LineChart>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <LineChart prefHeight="212.0" prefWidth="476.0">
+                                <xAxis>
+                                  <CategoryAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                              </LineChart>
+                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label alignment="TOP_CENTER" text="POI" />
+                                    <ListView fx:id="map_listview" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </items>
