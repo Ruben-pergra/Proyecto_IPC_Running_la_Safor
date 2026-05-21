@@ -73,6 +73,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import upv.ipc.sportlib.Activity;
+import upv.ipc.sportlib.Annotation;
+import upv.ipc.sportlib.AnnotationType;
+import upv.ipc.sportlib.GeoPoint;
+import upv.ipc.sportlib.MapProjection;
 import upv.ipc.sportlib.MapRegion;
 import upv.ipc.sportlib.SportActivityApp;
 
@@ -409,6 +413,11 @@ public class FXMLDocumentController implements Initializable {
             mapPane.localToScreen(x, y).getX(),
             mapPane.localToScreen(x, y).getY()
         );
+        
+        //Arreglar cuando esté actividades
+        /*if (actividadActual != null) {
+        guardarAnotacion(actividadActual, AnnotationType.POINT, "Punto interés", x, y);
+        }*/
     }
 
     // =========================================================
@@ -474,6 +483,16 @@ public class FXMLDocumentController implements Initializable {
         
         //Codigo de los alumnos//
         cargarListaMapas();
+        
+        mapa_listview.getSelectionModel().selectedItemProperty().addListener((observable, oldMap, newMap) -> {
+            if (newMap != null) {
+                File archivoImagen = new File(newMap.getImagePath());
+                
+                buildMap(archivoImagen);
+                
+                map_listview.getItems().clear();
+            }
+        });
     }
 
     // =========================================================
@@ -778,4 +797,19 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
+    
+    //Arreglar cuando esté actividades
+    /*
+    private void guardarAnotacion(Activity actividad, AnnotationType tipo, String texto, double x, double y) {
+    // 1. Obtener la proyección del mapa actual para convertir píxeles a GPS
+    MapProjection proj = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), 
+                                           mapPane.getWidth(), mapPane.getHeight());
+    GeoPoint geoP = proj.unproject(x, y);
+
+    // 2. Crear la anotación
+    Annotation ann = new Annotation(tipo, texto, "#FF0000", 2.0, List.of(geoP));
+
+    // 3. Persistir en la BDD
+    app.addAnnotation(actividad, ann); // 
+    }*/
 }
