@@ -31,11 +31,13 @@ import java.io.File;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -69,7 +71,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Modality;
+import javafx.scene.control.Button;
+import upv.ipc.sportlib.Activity;
+import upv.ipc.sportlib.MapRegion;
+import upv.ipc.sportlib.SportActivityApp;
 
 /**
  * Controlador principal de la aplicación de mapa con POIs.
@@ -160,7 +165,24 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private SplitPane splitPane;
  
+    
+    // =========================================================
+    //  VARIABLES DE LOS ALUMNOS
+    // =========================================================
 
+    private Pane paneVistas;
+    
+    @FXML
+    private ListView<MapRegion> mapa_listview;
+    @FXML
+    private VBox boxVistas;
+    @FXML
+    private Button bImportarGpx;
+    @FXML
+    private Button bBorrarGpx;
+    
+    private SportActivityApp app = SportActivityApp.getInstance();
+    
     // =========================================================
     //  MANEJADORES DE ZOOM
     // =========================================================
@@ -449,6 +471,9 @@ public class FXMLDocumentController implements Initializable {
         // ── Carga del mapa inicial ─────────────────────────────────────
         // El fichero se busca relativo al directorio de trabajo del proyecto.
         buildMap(new File("maps/upv.jpg"));
+        
+        //Codigo de los alumnos//
+        cargarListaMapas();
     }
 
     // =========================================================
@@ -682,4 +707,75 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    @FXML
+    private void onMapsButton(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mapademo/FXMLMapa.fxml"));
+            Parent vistaMapas = loader.load();
+            splitPane.getScene().setRoot(vistaMapas);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("No se pudo cargar la vista de mapas.");
+            alert.showAndWait();
+        }
+    }
+    
+    @FXML
+    private void onClickSesiones(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Sesiones.fxml"));
+            javafx.scene.Node vista = loader.load();
+            // SesionesController controller = loader.getController();
+            // controller.onEnter();
+            boxVistas.getChildren().clear();
+            boxVistas.getChildren().add(vista);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @FXML
+    private void onImportarGpx(ActionEvent event) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Seleccionar fichero GPX");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Ficheros GPX", "*.gpx"));
+        File gpxFile = fc.showOpenDialog(bImportarGpx.getScene().getWindow());
+
+        if (gpxFile != null) {
+            Activity activity = app.importActivity(gpxFile);
+            if (activity != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLMapa.fxml"));
+                try {
+                    javafx.scene.Node vista = loader.load();
+                    boxVistas.getChildren().clear();
+                    boxVistas.getChildren().add(vista);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    @FXML
+    private void onBorrarGpx(ActionEvent event) {
+    }
+    
+    
+    private void cargarListaMapas() {
+        List<MapRegion> regiones = app.getMapRegions();
+        if (regiones != null) {
+            mapa_listview.setItems(FXCollections.observableArrayList(regiones));
+        }
+
+        mapa_listview.setCellFactory(lv -> new ListCell<MapRegion>() {
+            @Override
+            protected void updateItem(MapRegion item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getName());
+            }
+        });
+    }
 }
