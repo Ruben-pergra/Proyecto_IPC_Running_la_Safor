@@ -30,7 +30,7 @@
             <SplitPane fx:id="splitPane" dividerPositions="0.28, 0.5" prefHeight="506.0" prefWidth="854.0" VBox.vgrow="ALWAYS">
                <items>
                   <ListView fx:id="map_listview" onMouseClicked="#listClicked" prefHeight="399.0" prefWidth="87.0" />
-                  <VBox prefHeight="38.0" prefWidth="320.0">
+                  <VBox fx:id="boxAct" prefHeight="38.0" prefWidth="320.0">
                      <children>
                         <VBox alignment="TOP_CENTER" prefHeight="301.0" prefWidth="316.0">
                            <children>
@@ -106,14 +106,14 @@
                                           <Insets left="5.0" />
                                        </GridPane.margin>
                                     </Label>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="x km" GridPane.columnIndex="1" />
-                                    <Text layoutX="132.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x min" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x km/h" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x km/h" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                    <Text fx:id="lblDistanciaTotal" strokeType="OUTSIDE" strokeWidth="0.0" text="x km" GridPane.columnIndex="1" />
+                                    <Text fx:id="lblDuracion" layoutX="132.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x min" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Text fx:id="lblVelocidadMax" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x km/h" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Text fx:id="lblRitmoMedio" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x km/h" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Text fx:id="lblDesnivelPos" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <Text fx:id="lblDesnivelNeg" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <Text fx:id="lblAltitudMax" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                    <Text fx:id="lblAltitudMin" layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                  </children>
                               </GridPane>
                            </children>
@@ -151,7 +151,7 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <LineChart prefHeight="212.0" prefWidth="606.0">
+                        <LineChart fx:id="perfilDesnivel" prefHeight="212.0" prefWidth="606.0">
                           <xAxis>
                             <CategoryAxis side="BOTTOM" />
                           </xAxis>
@@ -172,6 +172,11 @@
             <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
          </BorderPane.margin>
          <children>
+            <ImageView fx:id="homeButton" fitHeight="31.0" fitWidth="37.0" onMouseClicked="#onHome" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/408-4088622_senior-care-icon-grey-transparent-home-icon-hd.png" />
+               </image>
+            </ImageView>
             <Button layoutX="788.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="80.0" text="Actividades">
                <HBox.margin>
                   <Insets left="30.0" />

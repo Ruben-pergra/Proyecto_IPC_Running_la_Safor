@@ -36,6 +36,7 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -69,6 +70,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import upv.ipc.sportlib.SportActivityApp;
 import upv.ipc.sportlib.Activity;
@@ -174,6 +176,28 @@ public class FXMLDocumentController implements Initializable {
     private Button bImportarGpx;
     @FXML
     private Button bBorrarGpx;
+    @FXML
+    private VBox boxAct;
+    @FXML
+    private ImageView homeButton;
+    @FXML
+    private Text lblDistanciaTotal;
+    @FXML
+    private Text lblDuracion;
+    @FXML
+    private Text lblVelocidadMax;
+    @FXML
+    private Text lblRitmoMedio;
+    @FXML
+    private Text lblDesnivelPos;
+    @FXML
+    private Text lblDesnivelNeg;
+    @FXML
+    private Text lblAltitudMax;
+    @FXML
+    private Text lblAltitudMin;
+    @FXML
+    private LineChart<Double, Double> perfilDesnivel;
 
     // =========================================================
     //  MANEJADORES DE ZOOM
@@ -202,6 +226,7 @@ public class FXMLDocumentController implements Initializable {
 
     private SportActivityApp app = SportActivityApp.getInstance();
 
+    private java.util.List<javafx.scene.Node> hijosDefaultVistas;
     /**
      * Aplica el factor de escala al {@code zoomGroup}.
      *
@@ -418,6 +443,7 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        hijosDefaultVistas = new java.util.ArrayList<>(boxVistas.getChildren());
         // ── Configuración del slider de zoom ──────────────────────────
         zoom_slider.setMin(0.5);   // zoom mínimo: 50 %
         zoom_slider.setMax(1.5);   // zoom máximo: 150 %
@@ -683,29 +709,67 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
+    private void cargarEstadisticas(Activity activity) {
+        lblDistanciaTotal.setText(
+                String.format("%.2f km", activity.getTotalDistance() / 1000.0));
+
+        lblDuracion.setText(
+                Utils.formatDuration(activity.getDuration()));
+
+        lblVelocidadMax.setText(
+                String.format("%.1f km/h", activity.getAverageSpeed()));
+
+        lblRitmoMedio.setText(
+                String.format("%.1f min/km", activity.getAveragePace()));
+
+        lblDesnivelPos.setText(
+                String.format("+%.0f m", activity.getElevationGain()));
+
+        lblDesnivelNeg.setText(
+                String.format("-%.0f m", activity.getElevationLoss()));
+
+        lblAltitudMax.setText(
+                String.format("%.0f m", activity.getMaxElevation()));
+
+        lblAltitudMin.setText(
+                String.format("%.0f m", activity.getMinElevation()));
+    }
+
+    private void limpiarEstadisticas() {
+        lblDistanciaTotal.setText("- km");
+        lblDuracion.setText("-");
+        lblVelocidadMax.setText("- km/h");
+        lblRitmoMedio.setText("- min/km");
+        lblDesnivelPos.setText("- m");
+        lblDesnivelNeg.setText("- m");
+        lblAltitudMax.setText("- m");
+        lblAltitudMin.setText("- m");
+    }
+
     @FXML
     private void onClickSesiones(ActionEvent event) {
 
         try {
+            limpiarEstadisticas();
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("Sesiones.fxml")
             );
-
             javafx.scene.Node vista = loader.load();
             SesionesController controller = loader.getController();
             controller.onEnter();
+
             boxVistas.getChildren().clear();
             boxVistas.getChildren().add(vista);
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
-
     }
 
     @FXML
     private void onImportarGpx(ActionEvent event) {
+
+        mostrarHome();
 
         FileChooser fc = new FileChooser();
         fc.setTitle("Seleccionar fichero GPX");
@@ -715,26 +779,67 @@ public class FXMLDocumentController implements Initializable {
         File gpxFile = fc.showOpenDialog(bImportarGpx.getScene().getWindow());
 
         if (gpxFile != null) {
-
             Activity activity = app.importActivity(gpxFile);
-            
             if (activity != null) {
-                
                 MapRegion region = activity.getSuggestedMap();
-
                 buildMap(new File(region.getImagePath()));
+                cargarEstadisticas(activity);
 
-                MapProjection mapa = new MapProjection(
-                        region, mapPane.getWidth(), mapPane.getHeight());
-
+                Platform.runLater(() -> {
+                    MapProjection mapa = new MapProjection(
+                            region, mapPane.getWidth(), mapPane.getHeight());
+                    dibujarRuta(activity, mapa);
+                });
             }
-
         }
+    }
+
+    private void mostrarHome() {
+        boxVistas.getChildren().clear();
+        for (javafx.scene.Node n : hijosDefaultVistas) {
+            boxVistas.getChildren().add(n);
+        }
+    }
+
+    private void dibujarRuta(Activity activity, MapProjection mapa) {
+        javafx.scene.shape.Polyline ruta = new javafx.scene.shape.Polyline();
+        ruta.setStroke(Color.BLUE);
+        ruta.setStrokeWidth(2);
+
+        for (TrackPoint tp : activity.getTrackPoints()) {
+            Point2D p = mapa.project(tp);
+            ruta.getPoints().addAll(p.getX(), p.getY());
+        }
+
+        mapPane.getChildren().add(ruta);
+
+        Point2D pInicio = mapa.project(activity.getStartPoint());
+        Circle inicio = new Circle(8, Color.GREEN);
+        inicio.setCenterX(pInicio.getX());
+        inicio.setCenterY(pInicio.getY());
+
+        Point2D pFin = mapa.project(activity.getEndPoint());
+        Circle fin = new Circle(8, Color.RED);
+        fin.setCenterX(pFin.getX());
+        fin.setCenterY(pFin.getY());
+
+        Platform.runLater(() -> {
+            map_scrollpane.setHvalue(pInicio.getX() / mapPane.getWidth());
+            map_scrollpane.setVvalue(pInicio.getY() / mapPane.getHeight());
+
+            mapPane.getChildren().addAll(inicio, fin);
+        });
     }
 
     @FXML
     private void onBorrarGpx(ActionEvent event
     ) {
+    }
+
+    @FXML
+    private void onHome(MouseEvent event) {
+
+        mostrarHome();
     }
 
 }

@@ -76,7 +76,7 @@ public class SesionesController implements Initializable {
 
         colDuracion.setCellValueFactory(cell
                 -> new SimpleStringProperty(
-                        formatDuration(cell.getValue().getDuration())
+                        Utils.formatDuration(cell.getValue().getDuration())
                 )
         );
 
@@ -131,10 +131,10 @@ public class SesionesController implements Initializable {
         java.time.Duration totalDur = sessions.stream()
                 .map(Session::getDuration)
                 .reduce(java.time.Duration.ZERO, java.time.Duration::plus);
-        lblTiempoTotal.setText(formatDuration(totalDur));
+        lblTiempoTotal.setText(Utils.formatDuration(totalDur));
 
         lblFooterTotal.setText("Total (" + sessions.size() + " sesiones)");
-        lblFooterDuracion.setText(formatDuration(totalDur));
+        lblFooterDuracion.setText(Utils.formatDuration(totalDur));
         lblFooterImportadas.setText(String.valueOf(totalImp));
 
         long totalVis = sessions.stream()
@@ -143,19 +143,4 @@ public class SesionesController implements Initializable {
         lblFooterAnotaciones.setText(String.valueOf(totalAnn));
     }
 
-    private String formatDuration(java.time.Duration d) {
-        if (d == null) {
-            return "-";
-        }
-        long h = d.toHours();
-        long m = d.toMinutesPart();
-        long s = d.toSecondsPart();
-        if (h > 0) {
-            return h + "h " + m + "m";
-        }
-        if (m > 0) {
-            return m + "m";
-        }
-        return s + "s";
-    }
 }
