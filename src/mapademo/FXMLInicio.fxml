@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLInicioController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLInicioController">
    <children>
       <HBox alignment="CENTER" layoutX="200.0" layoutY="50.0" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="BIENVENIDO" />
+            <Text fx:id="labelBienvenido" strokeType="OUTSIDE" strokeWidth="0.0" text="BIENVENIDO" />
          </children>
       </HBox>
-      <HBox alignment="CENTER" layoutX="168.0" layoutY="150.0" prefHeight="100.0" prefWidth="265.0" spacing="100.0">
+      <HBox alignment="CENTER" layoutX="103.0" layoutY="119.0" prefHeight="198.0" prefWidth="395.0" spacing="100.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#OnRegistrarse" text="Registrarse" />
-            <Button mnemonicParsing="false" onAction="#onIniSesion" text="Iniciar sesión" />
+            <VBox alignment="CENTER" prefHeight="100.0" prefWidth="223.0">
+               <children>
+                  <ImageView fitHeight="52.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label stylesheets="@style.css" text="¿ERES NUEVO?" />
+                  <Label prefHeight="73.0" prefWidth="130.0" text="Crea tu cuenta para empezar a gestionar tus actividades" textAlignment="CENTER" wrapText="true" />
+                  <Button mnemonicParsing="false" onAction="#OnRegistrarse" stylesheets="@style.css" text="Registrarse" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="100.0" prefWidth="258.0">
+               <children>
+                  <ImageView fitHeight="52.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true" />
+                  <Label stylesheets="@style.css" text="¿YA TIENES CUENTA?" />
+                  <Label prefHeight="73.0" prefWidth="130.0" text="Inicia sesión para acceder a tus rutas y estadísticas " textAlignment="CENTER" wrapText="true" />
+                  <Button mnemonicParsing="false" onAction="#onIniSesion" prefHeight="26.0" prefWidth="105.0" stylesheets="@style.css" text="Iniciar sesión" />
+               </children>
+            </VBox>
          </children>
       </HBox>
    </children>
