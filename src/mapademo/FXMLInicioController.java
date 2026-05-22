@@ -60,7 +60,7 @@ public class FXMLInicioController implements Initializable {
                 mainStage.show();
             }
         } catch (IOException e) {
-            System.err.println("Error al cargar el formulario de registro: " + e.getMessage());
+            System.err.println("Error al cargar la ventana principal " + e.getMessage());
         }
     }
     
@@ -94,7 +94,7 @@ public class FXMLInicioController implements Initializable {
                 mainStage.show();
             }
         } catch (IOException e) {
-            System.err.println("Error al cargar el formulario de registro: " + e.getMessage());
+            System.err.println("Error al cargar la ventana principal " + e.getMessage());
         }
     }
     

@@ -27,9 +27,8 @@
    <center>
       <VBox prefHeight="556.0" prefWidth="853.0" stylesheets="@../resources/estilos.css">
          <children>
-            <SplitPane fx:id="splitPane" dividerPositions="0.28, 0.5" prefHeight="506.0" prefWidth="854.0" VBox.vgrow="ALWAYS">
+            <SplitPane fx:id="splitPane" dividerPositions="0.28" prefHeight="506.0" prefWidth="854.0" VBox.vgrow="ALWAYS">
                <items>
-                  <ListView fx:id="map_listview" onMouseClicked="#listClicked" prefHeight="399.0" prefWidth="87.0" />
                   <VBox prefHeight="38.0" prefWidth="320.0">
                      <children>
                         <VBox alignment="TOP_CENTER" prefHeight="301.0" prefWidth="316.0">
@@ -41,10 +40,16 @@
                                     <Button fx:id="bBorrarGpx" mnemonicParsing="false" onAction="#onBorrarGpx" prefHeight="26.0" prefWidth="115.0" text="Borrar GPX" />
                                  </children>
                               </HBox>
-                              <ListView prefHeight="350.0" prefWidth="238.0" VBox.vgrow="ALWAYS" />
+                              <ListView fx:id="actividades_listview" prefHeight="350.0" prefWidth="238.0" VBox.vgrow="ALWAYS" />
+                              <VBox alignment="TOP_CENTER" prefHeight="288.0" prefWidth="235.0">
+                                 <children>
+                                    <Label alignment="TOP_CENTER" text="MAPAS" />
+                                    <ListView fx:id="mapa_listview" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="282.0" prefWidth="238.0" spacing="8.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="254.0" prefWidth="235.0" spacing="8.0">
                            <padding>
                               <Insets top="15.0" />
                            </padding>
@@ -106,14 +111,14 @@
                                           <Insets left="5.0" />
                                        </GridPane.margin>
                                     </Label>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="x km" GridPane.columnIndex="1" />
-                                    <Text layoutX="132.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x min" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x km/h" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x km/h" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                    <Text fx:id="lblDistanciaTotal" strokeType="OUTSIDE" strokeWidth="0.0" text="x km" GridPane.columnIndex="1" />
+                                    <Text fx:id="lblDuracion" strokeType="OUTSIDE" strokeWidth="0.0" text="x min" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Text fx:id="lblVelocidadMax" strokeType="OUTSIDE" strokeWidth="0.0" text="x km/h" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Text fx:id="lblRitmoMedio" strokeType="OUTSIDE" strokeWidth="0.0" text="x km/h" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Text fx:id="lblDesnivelPos" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <Text fx:id="lblDesnivelNeg" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <Text fx:id="lblAltitudMax" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                    <Text fx:id="lblAltitudMin" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                  </children>
                               </GridPane>
                            </children>
@@ -151,14 +156,24 @@
                               </Pane>
                            </content>
                         </ScrollPane>
-                        <LineChart prefHeight="212.0" prefWidth="606.0">
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                        </LineChart>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <LineChart prefHeight="212.0" prefWidth="476.0">
+                                <xAxis>
+                                  <CategoryAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                              </LineChart>
+                              <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label alignment="TOP_CENTER" text="POI" />
+                                    <ListView fx:id="map_listview" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                </items>
@@ -172,13 +187,11 @@
             <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
          </BorderPane.margin>
          <children>
-            <Button layoutX="788.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefWidth="80.0" text="Actividades">
+            <Button contentDisplay="RIGHT" layoutX="721.0" layoutY="10.0" mnemonicParsing="false" onAction="#onClickSesiones" prefWidth="80.0" text="Sesiones">
                <HBox.margin>
-                  <Insets left="30.0" />
-               </HBox.margin>
-            </Button>
-            <Button contentDisplay="RIGHT" layoutX="721.0" layoutY="10.0" mnemonicParsing="false" onAction="#onClickSesiones" prefWidth="80.0" text="Sesiones" />
-            <Button contentDisplay="RIGHT" layoutX="169.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="Mapas">
+                  <Insets left="20.0" />
+               </HBox.margin></Button>
+            <Button contentDisplay="RIGHT" layoutX="169.0" layoutY="10.0" mnemonicParsing="false" onAction="#onMapsButton" prefHeight="26.0" prefWidth="80.0" text="Mapas">
                <HBox.margin>
                   <Insets left="250.0" />
                </HBox.margin>
