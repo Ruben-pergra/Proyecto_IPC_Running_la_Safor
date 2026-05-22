@@ -1,0 +1,226 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 22 may 2026, 16:49:34
+    Author     : Javier
+*/
+
+/* =====================================================
+   FONDO GENERAL
+===================================================== */
+
+.root{
+    -fx-font-family: "Segoe UI";
+    -fx-background-color: #f4f6f9;
+}
+
+
+/* =====================================================
+   TITULOS Y LABELS
+===================================================== */
+
+.label{
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 13px;
+}
+
+
+/* =====================================================
+   BOTONES
+===================================================== */
+
+.button{
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+
+    -fx-padding: 8 18 8 18;
+
+    -fx-cursor: hand;
+}
+
+.button:hover{
+    -fx-background-color: #2980b9;
+}
+
+.button:pressed{
+    -fx-background-color: #1f6391;
+}
+
+
+/* =====================================================
+   BOTONES PELIGROSOS
+===================================================== */
+
+#deleteButton{
+    -fx-background-color: #e74c3c;
+}
+
+#deleteButton:hover{
+    -fx-background-color: #c0392b;
+}
+
+
+/* =====================================================
+   TEXTFIELDS
+===================================================== */
+
+.text-field{
+    -fx-background-color: white;
+
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5;
+
+    -fx-background-radius: 5;
+
+    -fx-padding: 6;
+
+    -fx-font-size: 13px;
+}
+
+.text-field:focused{
+    -fx-border-color: #3498db;
+}
+
+
+/* =====================================================
+   TABLEVIEW
+===================================================== */
+
+.table-view{
+    -fx-background-color: white;
+
+    -fx-border-color: #dcdde1;
+
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+
+/* CABECERA TABLA */
+
+.table-view .column-header-background{
+    -fx-background-color: #34495e;
+}
+
+.table-view .column-header{
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header .label{
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+
+/* FILAS */
+
+.table-row-cell{
+    -fx-background-color: white;
+}
+
+.table-row-cell:odd{
+    -fx-background-color: #f8f9fa;
+}
+
+.table-row-cell:selected{
+    -fx-background-color: #aed6f1;
+}
+
+
+/* =====================================================
+   LISTVIEW
+===================================================== */
+
+.list-view{
+    -fx-background-color: white;
+
+    -fx-border-color: #dcdde1;
+
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+}
+
+.list-cell{
+    -fx-font-size: 13px;
+}
+
+.list-cell:filled:selected{
+    -fx-background-color: #aed6f1;
+    -fx-text-fill: black;
+}
+
+
+/* =====================================================
+   MENU BAR
+===================================================== */
+
+.menu-bar{
+    -fx-background-color: #2c3e50;
+}
+
+.menu-bar .label{
+    -fx-text-fill: white;
+}
+
+.menu-item .label{
+    -fx-text-fill: black;
+}
+
+
+/* =====================================================
+   SCROLLPANE
+===================================================== */
+
+.scroll-pane{
+    -fx-background: #f4f6f9;
+}
+
+
+/* =====================================================
+   FORMULARIOS
+===================================================== */
+
+.grid-pane{
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+    -fx-padding: 15;
+}
+
+
+/* =====================================================
+   SPLITPANE
+===================================================== */
+
+.split-pane{
+    -fx-background-color: #f4f6f9;
+}
+
+
+/* =====================================================
+   TABLAS MÁS PROFESIONALES
+===================================================== */
+
+.table-view .table-cell{
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 6;
+}
+
+
+/* =====================================================
+   BOTÓN IMPORTAR ESPECIAL
+===================================================== */
+
+#importButton{
+    -fx-background-color: #27ae60;
+}
+
+#importButton:hover{
+    -fx-background-color: #1e8449;
+}

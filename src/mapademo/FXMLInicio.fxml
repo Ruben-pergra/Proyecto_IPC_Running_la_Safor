@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLInicioController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLInicioController">
    <children>
       <HBox alignment="CENTER" layoutX="200.0" layoutY="50.0" prefHeight="100.0" prefWidth="200.0">
          <children>
@@ -22,15 +22,15 @@
                   <ImageView fitHeight="52.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true" />
                   <Label stylesheets="@style.css" text="¿ERES NUEVO?" />
                   <Label prefHeight="73.0" prefWidth="130.0" text="Crea tu cuenta para empezar a gestionar tus actividades" textAlignment="CENTER" wrapText="true" />
-                  <Button mnemonicParsing="false" onAction="#OnRegistrarse" text="Registrarse" />
+                  <Button mnemonicParsing="false" onAction="#OnRegistrarse" stylesheets="@style.css" text="Registrarse" />
                </children>
             </VBox>
             <VBox alignment="CENTER" prefHeight="100.0" prefWidth="258.0">
                <children>
                   <ImageView fitHeight="52.0" fitWidth="57.0" pickOnBounds="true" preserveRatio="true" />
-                  <Label text="¿YA TIENES CUENTA?" />
+                  <Label stylesheets="@style.css" text="¿YA TIENES CUENTA?" />
                   <Label prefHeight="73.0" prefWidth="130.0" text="Inicia sesión para acceder a tus rutas y estadísticas " textAlignment="CENTER" wrapText="true" />
-                  <Button mnemonicParsing="false" onAction="#onIniSesion" prefHeight="26.0" prefWidth="105.0" text="Iniciar sesión" />
+                  <Button mnemonicParsing="false" onAction="#onIniSesion" prefHeight="26.0" prefWidth="105.0" stylesheets="@style.css" text="Iniciar sesión" />
                </children>
             </VBox>
          </children>
