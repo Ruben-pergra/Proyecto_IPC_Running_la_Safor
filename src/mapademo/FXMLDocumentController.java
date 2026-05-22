@@ -37,6 +37,7 @@ import java.util.ResourceBundle;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -71,14 +72,13 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import upv.ipc.sportlib.Activity;
-import upv.ipc.sportlib.Annotation;
-import upv.ipc.sportlib.AnnotationType;
-import upv.ipc.sportlib.GeoPoint;
 import upv.ipc.sportlib.MapProjection;
 import upv.ipc.sportlib.MapRegion;
 import upv.ipc.sportlib.SportActivityApp;
+import upv.ipc.sportlib.TrackPoint;
 
 /**
  * Controlador principal de la aplicación de mapa con POIs.
@@ -185,6 +185,32 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button bBorrarGpx;
     
+    @FXML
+    private VBox boxAct;
+    @FXML
+    private ImageView homeButton;
+    @FXML
+    private Text lblDistanciaTotal;
+    @FXML
+    private Text lblDuracion;
+    @FXML
+    private Text lblVelocidadMax;
+    @FXML
+    private Text lblRitmoMedio;
+    @FXML
+    private Text lblDesnivelPos;
+    @FXML
+    private Text lblDesnivelNeg;
+    @FXML
+    private Text lblAltitudMax;
+    @FXML
+    private Text lblAltitudMin;
+    @FXML
+    private LineChart<Double, Double> perfilDesnivel;
+    @FXML
+    private ListView<Activity> actividades_listview;
+    
+    private java.util.List<javafx.scene.Node> hijosDefaultVistas;
     private SportActivityApp app = SportActivityApp.getInstance();
     
     // =========================================================
@@ -483,6 +509,7 @@ public class FXMLDocumentController implements Initializable {
         
         //Codigo de los alumnos//
         cargarListaMapas();
+        hijosDefaultVistas = new java.util.ArrayList<>(boxVistas.getChildren());
         
         mapa_listview.getSelectionModel().selectedItemProperty().addListener((observable, oldMap, newMap) -> {
             if (newMap != null) {
@@ -491,6 +518,45 @@ public class FXMLDocumentController implements Initializable {
                 buildMap(archivoImagen);
                 
                 map_listview.getItems().clear();
+            }
+        });
+        
+        actividades_listview.setCellFactory(lv -> new ListCell<Activity>() {
+            @Override
+            protected void updateItem(Activity item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    // Muestra algo como "Actividad (5.20 km)" en la lista
+                    setText("Actividad (" + String.format("%.2f km", item.getTotalDistance() / 1000.0) + ")");
+                }
+            }
+        });
+        
+        actividades_listview.getSelectionModel().selectedItemProperty().addListener((obs, oldAct, newAct) -> {
+            if (newAct != null && mapa_listview.getSelectionModel().getSelectedItem() != null) {
+                // Limpiamos el mapa de rutas o círculos anteriores
+                mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle);
+                
+                // Cargamos estadísticas y dibujamos
+                cargarEstadisticas(newAct);
+                MapProjection mapaProj = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), mapPane.getWidth(), mapPane.getHeight());
+                dibujarRuta(newAct, mapaProj);
+            }
+        });
+        
+        mapa_listview.getSelectionModel().selectedItemProperty().addListener((observable, oldMap, newMap) -> {
+            if (newMap != null) {
+                // Cambiamos la imagen del mapa
+                File archivoImagen = new File(newMap.getImagePath());
+                buildMap(archivoImagen);
+                
+                // Limpiamos rutas y estadísticas viejas
+                limpiarEstadisticas();
+                
+                // ¡Cargamos las actividades asociadas a este mapa!
+                cargarActividadesDelMapa(newMap);
             }
         });
     }
@@ -744,44 +810,131 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void onClickSesiones(ActionEvent event) {
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Sesiones.fxml"));
+            limpiarEstadisticas();
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("Sesiones.fxml")
+            );
             javafx.scene.Node vista = loader.load();
-            // SesionesController controller = loader.getController();
-            // controller.onEnter();
+            SesionesController controller = loader.getController();
+            controller.onEnter();
+
             boxVistas.getChildren().clear();
             boxVistas.getChildren().add(vista);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
+     private void cargarEstadisticas(Activity activity) {
+        lblDistanciaTotal.setText(
+                String.format("%.2f km", activity.getTotalDistance() / 1000.0));
+
+        lblDuracion.setText(
+                Utils.formatDuration(activity.getDuration()));
+
+        lblVelocidadMax.setText(
+                String.format("%.1f km/h", activity.getAverageSpeed()));
+
+        lblRitmoMedio.setText(
+                String.format("%.1f min/km", activity.getAveragePace()));
+
+        lblDesnivelPos.setText(
+                String.format("+%.0f m", activity.getElevationGain()));
+
+        lblDesnivelNeg.setText(
+                String.format("-%.0f m", activity.getElevationLoss()));
+
+        lblAltitudMax.setText(
+                String.format("%.0f m", activity.getMaxElevation()));
+
+        lblAltitudMin.setText(
+                String.format("%.0f m", activity.getMinElevation()));
+    }
+     
+    private void limpiarEstadisticas() {
+        lblDistanciaTotal.setText("- km");
+        lblDuracion.setText("-");
+        lblVelocidadMax.setText("- km/h");
+        lblRitmoMedio.setText("- min/km");
+        lblDesnivelPos.setText("- m");
+        lblDesnivelNeg.setText("- m");
+        lblAltitudMax.setText("- m");
+        lblAltitudMin.setText("- m");
+    }
+    
     @FXML
     private void onImportarGpx(ActionEvent event) {
+
+        mostrarHome();
+
         FileChooser fc = new FileChooser();
         fc.setTitle("Seleccionar fichero GPX");
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Ficheros GPX", "*.gpx"));
+        fc.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Ficheros GPX", "*.gpx")
+        );
         File gpxFile = fc.showOpenDialog(bImportarGpx.getScene().getWindow());
 
         if (gpxFile != null) {
             Activity activity = app.importActivity(gpxFile);
             if (activity != null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLMapa.fxml"));
-                try {
-                    javafx.scene.Node vista = loader.load();
-                    boxVistas.getChildren().clear();
-                    boxVistas.getChildren().add(vista);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                MapRegion region = activity.getSuggestedMap();
+                buildMap(new File(region.getImagePath()));
+                cargarEstadisticas(activity);
+
+                Platform.runLater(() -> {
+                    MapProjection mapa = new MapProjection(
+                            region, mapPane.getWidth(), mapPane.getHeight());
+                    dibujarRuta(activity, mapa);
+                });
             }
         }
     }
+    
+    private void mostrarHome() {
+        boxVistas.getChildren().clear();
+        for (javafx.scene.Node n : hijosDefaultVistas) {
+            boxVistas.getChildren().add(n);
+        }
+    }
+
     
     @FXML
     private void onBorrarGpx(ActionEvent event) {
     }
     
+    private void dibujarRuta(Activity activity, MapProjection mapa) {
+        javafx.scene.shape.Polyline ruta = new javafx.scene.shape.Polyline();
+        ruta.setStroke(Color.BLUE);
+        ruta.setStrokeWidth(2);
+
+        for (TrackPoint tp : activity.getTrackPoints()) {
+            Point2D p = mapa.project(tp);
+            ruta.getPoints().addAll(p.getX(), p.getY());
+        }
+
+        mapPane.getChildren().add(ruta);
+
+        Point2D pInicio = mapa.project(activity.getStartPoint());
+        Circle inicio = new Circle(8, Color.GREEN);
+        inicio.setCenterX(pInicio.getX());
+        inicio.setCenterY(pInicio.getY());
+
+        Point2D pFin = mapa.project(activity.getEndPoint());
+        Circle fin = new Circle(8, Color.RED);
+        fin.setCenterX(pFin.getX());
+        fin.setCenterY(pFin.getY());
+
+        Platform.runLater(() -> {
+            map_scrollpane.setHvalue(pInicio.getX() / mapPane.getWidth());
+            map_scrollpane.setVvalue(pInicio.getY() / mapPane.getHeight());
+
+            mapPane.getChildren().addAll(inicio, fin);
+        });
+    }
+
     
     private void cargarListaMapas() {
         List<MapRegion> regiones = app.getMapRegions();
@@ -796,6 +949,30 @@ public class FXMLDocumentController implements Initializable {
                 setText(empty || item == null ? null : item.getName());
             }
         });
+    }
+    
+    @FXML
+    private void onHome(MouseEvent event) {
+
+        mostrarHome();
+    }
+    
+    private void cargarActividadesDelMapa(MapRegion mapa) {
+        // Vaciamos la lista actual
+        actividades_listview.getItems().clear();
+        
+        // Pedimos TODAS las actividades del usuario actual
+        List<Activity> misActividades = app.getUserActivities();
+        
+        // Filtramos solo las que pertenecen a este mapa
+        if (misActividades != null) {
+            for (Activity act : misActividades) {
+                // Comparamos si el mapa sugerido para la actividad es el que estamos viendo
+                if (act.getSuggestedMap() != null && act.getSuggestedMap().getName().equals(mapa.getName())) {
+                    actividades_listview.getItems().add(act);
+                }
+            }
+        }
     }
     
     //Arreglar cuando esté actividades

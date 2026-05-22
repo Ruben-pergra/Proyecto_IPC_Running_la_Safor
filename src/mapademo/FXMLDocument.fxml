@@ -40,7 +40,7 @@
                                     <Button fx:id="bBorrarGpx" mnemonicParsing="false" onAction="#onBorrarGpx" prefHeight="26.0" prefWidth="115.0" text="Borrar GPX" />
                                  </children>
                               </HBox>
-                              <ListView prefHeight="350.0" prefWidth="238.0" VBox.vgrow="ALWAYS" />
+                              <ListView fx:id="actividades_listview" prefHeight="350.0" prefWidth="238.0" VBox.vgrow="ALWAYS" />
                               <VBox alignment="TOP_CENTER" prefHeight="288.0" prefWidth="235.0">
                                  <children>
                                     <Label alignment="TOP_CENTER" text="MAPAS" />
@@ -111,14 +111,14 @@
                                           <Insets left="5.0" />
                                        </GridPane.margin>
                                     </Label>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="x km" GridPane.columnIndex="1" />
-                                    <Text layoutX="132.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x min" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x km/h" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x km/h" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                    <Text layoutX="10.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                    <Text fx:id="lblDistanciaTotal" strokeType="OUTSIDE" strokeWidth="0.0" text="x km" GridPane.columnIndex="1" />
+                                    <Text fx:id="lblDuracion" strokeType="OUTSIDE" strokeWidth="0.0" text="x min" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Text fx:id="lblVelocidadMax" strokeType="OUTSIDE" strokeWidth="0.0" text="x km/h" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <Text fx:id="lblRitmoMedio" strokeType="OUTSIDE" strokeWidth="0.0" text="x km/h" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Text fx:id="lblDesnivelPos" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <Text fx:id="lblDesnivelNeg" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <Text fx:id="lblAltitudMax" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                    <Text fx:id="lblAltitudMin" strokeType="OUTSIDE" strokeWidth="0.0" text="x m" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                  </children>
                               </GridPane>
                            </children>
