@@ -69,6 +69,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 
 /**
  * Controlador principal de la aplicación de mapa con POIs.
