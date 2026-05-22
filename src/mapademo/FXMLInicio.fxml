@@ -12,7 +12,7 @@
    <children>
       <HBox alignment="CENTER" layoutX="200.0" layoutY="50.0" prefHeight="100.0" prefWidth="200.0">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="BIENVENIDO" />
+            <Text fx:id="labelBienvenido" strokeType="OUTSIDE" strokeWidth="0.0" text="BIENVENIDO" />
          </children>
       </HBox>
       <HBox alignment="CENTER" layoutX="103.0" layoutY="119.0" prefHeight="198.0" prefWidth="395.0" spacing="100.0">
