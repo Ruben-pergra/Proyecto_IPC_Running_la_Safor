@@ -73,6 +73,7 @@ import javafx.util.Duration;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import upv.ipc.sportlib.Activity;
 import upv.ipc.sportlib.MapProjection;
@@ -186,10 +187,6 @@ public class FXMLDocumentController implements Initializable {
     private Button bBorrarGpx;
     
     @FXML
-    private VBox boxAct;
-    @FXML
-    private ImageView homeButton;
-    @FXML
     private Text lblDistanciaTotal;
     @FXML
     private Text lblDuracion;
@@ -206,13 +203,20 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Text lblAltitudMin;
     @FXML
-    private LineChart<Double, Double> perfilDesnivel;
-    @FXML
     private ListView<Activity> actividades_listview;
     
     private java.util.List<javafx.scene.Node> hijosDefaultVistas;
     private SportActivityApp app = SportActivityApp.getInstance();
     
+    @FXML
+    private LineChart<Number, Number> elevationChart;
+    @FXML 
+    private NumberAxis xAxis;
+    @FXML 
+    private NumberAxis yAxis;
+    private MapProjection currentProjection;
+    private Circle hoverMarker;
+
     // =========================================================
     //  MANEJADORES DE ZOOM
     // =========================================================
@@ -291,7 +295,6 @@ public class FXMLDocumentController implements Initializable {
      *
      * @param event evento de ratón sobre el ListView
      */
-    @FXML
     void listClicked(MouseEvent event) {
         // Obtenemos el POI seleccionado; si no hay ninguno, salimos
         Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
@@ -597,7 +600,6 @@ public class FXMLDocumentController implements Initializable {
      *
      * @param event evento de acción del menú
      */
-    @FXML
     private void about(ActionEvent event) {
         Alert mensaje = new Alert(Alert.AlertType.INFORMATION);
 
@@ -695,7 +697,6 @@ public class FXMLDocumentController implements Initializable {
      * @param event evento de acción del menú
      * @throws IOException si hay un problema al obtener la ruta canónica
      */
-    @FXML
     private void cambiarMapa(ActionEvent event) throws IOException {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(".")); // Empezamos en el directorio del proyecto
@@ -885,9 +886,11 @@ public class FXMLDocumentController implements Initializable {
                 cargarEstadisticas(activity);
 
                 Platform.runLater(() -> {
-                    MapProjection mapa = new MapProjection(
-                            region, mapPane.getWidth(), mapPane.getHeight());
+                    MapProjection mapa = new MapProjection(region, mapPane.getWidth(), mapPane.getHeight());
+                    currentProjection = mapa;       
                     dibujarRuta(activity, mapa);
+                    setupHoverMarker();             
+                    loadElevationChart(activity);   
                 });
             }
         }
@@ -951,7 +954,6 @@ public class FXMLDocumentController implements Initializable {
         });
     }
     
-    @FXML
     private void onHome(MouseEvent event) {
 
         mostrarHome();
@@ -973,6 +975,56 @@ public class FXMLDocumentController implements Initializable {
                 }
             }
         }
+    }
+    
+    private void setupHoverMarker() {
+        hoverMarker = new Circle(7);
+        hoverMarker.setFill(Color.DODGERBLUE);
+        hoverMarker.setStroke(Color.WHITE);
+        hoverMarker.setStrokeWidth(2);
+        hoverMarker.setVisible(false);
+        hoverMarker.setMouseTransparent(true); // no interfiere con clics del mapa
+        mapPane.getChildren().add(hoverMarker);
+    }
+
+    private void loadElevationChart(Activity activity) {
+        elevationChart.getData().clear();
+
+        javafx.scene.chart.XYChart.Series<Number, Number> series = new javafx.scene.chart.XYChart.Series<>();
+        series.setName("Altitud");
+
+        List<TrackPoint> points = activity.getTrackPoints();
+        double distAcum = 0.0;
+
+        for (int i = 0; i < points.size(); i++) {
+            if (i > 0) {
+                distAcum += points.get(i).distanceTo(points.get(i - 1)) / 1000.0;
+            }
+
+            javafx.scene.chart.XYChart.Data<Number, Number> dato = new javafx.scene.chart.XYChart.Data<>(distAcum, points.get(i).getElevation());
+
+            final int idx = i;
+            dato.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                if (newNode != null) {
+                    newNode.setOnMouseEntered(e -> {
+                        if (currentProjection == null || hoverMarker == null) return;
+                        Point2D pixel = currentProjection.project(points.get(idx));
+                        hoverMarker.setCenterX(pixel.getX());
+                        hoverMarker.setCenterY(pixel.getY());
+                        hoverMarker.setVisible(true);
+                        hoverMarker.toFront();
+                    });
+                }
+            });
+
+            series.getData().add(dato);
+        }
+
+        elevationChart.getData().add(series);
+
+        elevationChart.setOnMouseExited(e -> {
+            if (hoverMarker != null) hoverMarker.setVisible(false);
+        });
     }
     
     //Arreglar cuando esté actividades
