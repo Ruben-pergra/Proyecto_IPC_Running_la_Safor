@@ -14,75 +14,79 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="rootVbox" onMouseClicked="#actualizarRootVbox" prefHeight="354.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLIniSesionController">
+<VBox fx:id="rootVbox" alignment="CENTER" onMouseClicked="#actualizarRootVbox" prefHeight="450.0" prefWidth="650.0" styleClass="pantalla-inicio" stylesheets="@../resources/estilos.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLIniSesionController">
    <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #0081B4;">
+      <VBox alignment="CENTER" fillWidth="false" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="590.0" prefWidth="560.0" spacing="15.0" styleClass="tarjeta">
          <children>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Iniciar sesión">
-               <font>
-                  <Font name="Arial Rounded MT Bold" size="36.0" />
-               </font>
-               <effect>
-                  <Blend mode="ADD" />
-               </effect>
-            </Text>
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </HBox>
-      <GridPane prefHeight="500.0" prefWidth="600.0" vgap="20.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="427.0" minWidth="10.0" prefWidth="319.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.0" minWidth="10.0" prefWidth="221.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="71.0" minHeight="10.0" prefHeight="59.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="43.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="87.0" prefWidth="501.0" style="-fx-background-radius: 15;" styleClass="hbox_franja" stylesheets="@../resources/estilos.css">
                <children>
-                  <Label text="Nickname" textFill="#0303eb" />
-                  <TextField fx:id="nicknameField" />
-                  <Label fx:id="nicknameError" text="Entre 6 y 15 caracteres,letras,digitos,guiones" textFill="#e30b0b" />
+                  <VBox>
+                     <children>
+                        <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="titulo-principal" text="Iniciar sesión">
+                           <font>
+                              <Font name="Arial Rounded MT Bold" size="36.0" />
+                           </font>
+                           <effect>
+                              <Blend mode="ADD" />
+                           </effect>
+                        </Text>
+                        <Label styleClass="subtitulo" text="Running la Safor" />
+                     </children>
+                  </VBox>
                </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-               <children>
-                  <Label text="Password" textFill="#150ae8" />
-                  <PasswordField fx:id="passwordField">
-                     <VBox.margin>
-                        <Insets right="300.0" />
-                     </VBox.margin>
-                  </PasswordField>
-                  <Label fx:id="passwordError" text="Entre 8 y 20 caracteres, minimo una mayuscula, minuscula y simbolo" textFill="#f20c0c" />
-               </children>
-            </VBox>
-            <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <children>
-                  <Button fx:id="bAccept" mnemonicParsing="false" onAction="#handleBAcceptOnAction" style="-fx-background-color: #0081B4;" text="Aceptar" textFill="WHITE" />
-                  <Button fx:id="bCancel" mnemonicParsing="false" style="-fx-background-color: #0081B4;" text="Cancel" textAlignment="RIGHT" textFill="WHITE">
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
-               </GridPane.margin>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets bottom="18.0" left="24.0" right="24.0" top="18.0" />
+               </padding>
             </HBox>
+            <GridPane prefHeight="210.0" prefWidth="383.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label prefHeight="127.0" prefWidth="135.0" styleClass="titulo-tarjeta" text="Usuario" textFill="#0303eb">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="nicknameField" maxWidth="-Infinity" minHeight="-Infinity" prefWidth="200.0" GridPane.rowIndex="1" />
+                  <Label fx:id="nicknameError" styleClass="label-error" text="Entre 6 y 15 caracteres,letras,digitos,guiones" textFill="#e30b0b" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                  <Label styleClass="titulo-tarjeta" text="Contraseña" textFill="#150ae8" GridPane.rowIndex="3">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <PasswordField fx:id="passwordField" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="200.0" GridPane.rowIndex="4" />
+                  <Label fx:id="passwordError" styleClass="label-error" text="Entre 8 y 20 caracteres, minimo una mayuscula, minuscula y simbolo" textFill="#f20c0c" GridPane.columnSpan="2" GridPane.rowIndex="5" />
+                  <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                     <children>
+                        <Button fx:id="bAccept" defaultButton="true" mnemonicParsing="false" onAction="#handleBAcceptOnAction" styleClass="button-accent" text="Aceptar" textFill="WHITE" />
+                        <Button fx:id="bCancel" cancelButton="true" mnemonicParsing="false" text="Cancelar" textAlignment="RIGHT" textFill="WHITE">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <GridPane.margin>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
+                     </GridPane.margin>
+                  </HBox>
+               </children>
+            </GridPane>
          </children>
-         <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </VBox.margin>
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-      </GridPane>
+      </VBox>
    </children>
 </VBox>

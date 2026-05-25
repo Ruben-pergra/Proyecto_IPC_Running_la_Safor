@@ -75,6 +75,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import upv.ipc.sportlib.Activity;
 import upv.ipc.sportlib.MapProjection;
 import upv.ipc.sportlib.MapRegion;
@@ -84,11 +85,11 @@ import upv.ipc.sportlib.TrackPoint;
 /**
  * Controlador principal de la aplicación de mapa con POIs.
  *
- * La anotación @FXML conecta automáticamente los campos de esta clase
- * con los elementos declarados en el fichero FXML mediante su atributo fx:id.
+ * La anotación @FXML conecta automáticamente los campos de esta clase con los
+ * elementos declarados en el fichero FXML mediante su atributo fx:id.
  *
- * Implementa {@link Initializable} para poder ejecutar código de
- * inicialización una vez que el FXML ha sido cargado completamente.
+ * Implementa {@link Initializable} para poder ejecutar código de inicialización
+ * una vez que el FXML ha sido cargado completamente.
  */
 public class FXMLDocumentController implements Initializable {
 
@@ -111,72 +112,73 @@ public class FXMLDocumentController implements Initializable {
     //               └─ Circle    ← anotaciones circulares
     //
     // =========================================================
-
-    /** Group que se escala para aplicar el zoom. */
+    /**
+     * Group que se escala para aplicar el zoom.
+     */
     private Group zoomGroup;
 
     /**
-     * Pane que actúa como lienzo del mapa.
-     * Contiene la imagen de fondo y todos los elementos superpuestos
-     * (textos, círculos, etc.). Sus dimensiones coinciden con las de
-     * la imagen cargada.
+     * Pane que actúa como lienzo del mapa. Contiene la imagen de fondo y todos
+     * los elementos superpuestos (textos, círculos, etc.). Sus dimensiones
+     * coinciden con las de la imagen cargada.
      */
     private Pane mapPane;
 
-    
-    /** Menú contextual reutilizable para el clic derecho sobre el mapa. */
+    /**
+     * Menú contextual reutilizable para el clic derecho sobre el mapa.
+     */
     private ContextMenu mapContextMenu;
 
-
     /**
-     * Indica si el controlador está en modo inserción de POI.
-     * {@code true} → el próximo clic izquierdo sobre el mapa abre el diálogo.
+     * Indica si el controlador está en modo inserción de POI. {@code true} → el
+     * próximo clic izquierdo sobre el mapa abre el diálogo.
      */
     private boolean insertionMode = false;
 
     // =========================================================
     //  ELEMENTOS FXML  (inyectados automáticamente por el cargador)
     // =========================================================
-
-    /** Lista lateral que muestra todos los POIs añadidos al mapa. */
+    /**
+     * Lista lateral que muestra todos los POIs añadidos al mapa.
+     */
     @FXML
     private ListView<Poi> map_listview;
 
-    /** ScrollPane que envuelve el mapa y permite desplazarlo. */
+    /**
+     * ScrollPane que envuelve el mapa y permite desplazarlo.
+     */
     @FXML
     private ScrollPane map_scrollpane;
 
     /**
-     * Slider de zoom.
-     * Rango: [0.5 – 1.5]. Valor inicial: 1.0 (sin zoom).
-     * Cada cambio de valor llama al método zoom().
+     * Slider de zoom. Rango: [0.5 – 1.5]. Valor inicial: 1.0 (sin zoom). Cada
+     * cambio de valor llama al método zoom().
      */
     @FXML
     private Slider zoom_slider;
 
     /**
-     * Botón de pin visible sobre el mapa.
-     * Se desplaza hasta la posición del POI seleccionado en la lista.
+     * Botón de pin visible sobre el mapa. Se desplaza hasta la posición del POI
+     * seleccionado en la lista.
      */
     private MenuButton map_pin;
 
     // FIX 5 — Eliminadas las variables sin uso:
     //   · 'mousePosistion' (errata + duplicado de mousePosition)
     //   · 'pin_info'       (inyectada pero nunca actualizada)
-
-    /** Etiqueta en la barra de estado que muestra las coordenadas del ratón. */
+    /**
+     * Etiqueta en la barra de estado que muestra las coordenadas del ratón.
+     */
     @FXML
     private Label mousePosition;
     @FXML
     private SplitPane splitPane;
- 
-    
+
     // =========================================================
     //  VARIABLES DE LOS ALUMNOS
     // =========================================================
-
     private Pane paneVistas;
-    
+
     @FXML
     private ListView<MapRegion> mapa_listview;
     @FXML
@@ -185,48 +187,45 @@ public class FXMLDocumentController implements Initializable {
     private Button bImportarGpx;
     @FXML
     private Button bBorrarGpx;
-    
-    @FXML
-    private VBox boxAct;
+
     @FXML
     private ImageView homeButton;
     @FXML
-    private Text lblDistanciaTotal;
+    private Label lblDistanciaTotal;
     @FXML
-    private Text lblDuracion;
+    private Label lblDuracion;
     @FXML
-    private Text lblVelocidadMax;
+    private Label lblVelocidadMax;
     @FXML
-    private Text lblRitmoMedio;
+    private Label lblRitmoMedio;
     @FXML
-    private Text lblDesnivelPos;
+    private Label lblDesnivelPos;
     @FXML
-    private Text lblDesnivelNeg;
+    private Label lblDesnivelNeg;
     @FXML
-    private Text lblAltitudMax;
+    private Label lblAltitudMax;
     @FXML
-    private Text lblAltitudMin;
-    @FXML
-    private LineChart<Double, Double> perfilDesnivel;
+    private Label lblAltitudMin;
     @FXML
     private ListView<Activity> actividades_listview;
-    
+
     private java.util.List<javafx.scene.Node> hijosDefaultVistas;
     private SportActivityApp app = SportActivityApp.getInstance();
-    
+
     @FXML
     private LineChart<Number, Number> elevationChart;
-    @FXML 
+    @FXML
     private NumberAxis xAxis;
-    @FXML 
+    @FXML
     private NumberAxis yAxis;
     private MapProjection currentProjection;
     private Circle hoverMarker;
-    
+    @FXML
+    private BorderPane rootPane;
+
     // =========================================================
     //  MANEJADORES DE ZOOM
     // =========================================================
-
     /**
      * Aumenta el zoom en 0.1 unidades al pulsar el botón "+".
      *
@@ -252,8 +251,8 @@ public class FXMLDocumentController implements Initializable {
     /**
      * Aplica el factor de escala al {@code zoomGroup}.
      *
-     * Este método es invocado automáticamente cada vez que cambia el
-     * valor del slider, gracias al listener registrado en {@link #initialize}.
+     * Este método es invocado automáticamente cada vez que cambia el valor del
+     * slider, gracias al listener registrado en {@link #initialize}.
      *
      * Truco: guardamos y restauramos los valores de scroll para que el
      * contenido visible no salte al cambiar la escala.
@@ -278,37 +277,35 @@ public class FXMLDocumentController implements Initializable {
     // =========================================================
     //  SELECCIÓN EN EL LISTVIEW → CENTRADO EN EL MAPA
     // =========================================================
-
     /**
      * Se ejecuta cuando el usuario hace clic en un elemento del ListView.
      *
      * Objetivo: centrar el ScrollPane sobre la posición del POI seleccionado
      * con una animación suave de 500 ms, y mover el pin al punto.
      *
-     * Cálculo del scroll
-     * ------------------
-     * El ScrollPane expresa su posición como valores normalizados [0, 1]:
-     *   · hValue = 0 → extremo izquierdo
-     *   · hValue = 1 → extremo derecho
+     * Cálculo del scroll ------------------ El ScrollPane expresa su posición
+     * como valores normalizados [0, 1]: · hValue = 0 → extremo izquierdo ·
+     * hValue = 1 → extremo derecho
      *
      * Para centrar el POI necesitamos:
      *
-     *   scrollH = (poiX_escalado - viewportAncho / 2)
-     *             ─────────────────────────────────────
-     *             (mapaAncho_escalado - viewportAncho)
+     * scrollH = (poiX_escalado - viewportAncho / 2)
+     * ───────────────────────────────────── (mapaAncho_escalado -
+     * viewportAncho)
      *
      * Aplicamos clamp para no salir del rango [0, 1].
      *
      * @param event evento de ratón sobre el ListView
      */
-    @FXML
     void listClicked(MouseEvent event) {
         // Obtenemos el POI seleccionado; si no hay ninguno, salimos
         Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
-        if (itemSelected == null) return;
+        if (itemSelected == null) {
+            return;
+        }
 
         // ── Dimensiones del mapa con el zoom actual aplicado ──────────
-        double mapWidth  = mapPane.getWidth()  * zoomGroup.getScaleX();
+        double mapWidth = mapPane.getWidth() * zoomGroup.getScaleX();
         double mapHeight = mapPane.getHeight() * zoomGroup.getScaleY();
 
         // ── Posición del POI escalada ──────────────────────────────────
@@ -325,7 +322,7 @@ public class FXMLDocumentController implements Initializable {
         // ── Cálculo del scroll normalizado [0, 1] ─────────────────────
         // Restamos la mitad del viewport para que el POI quede centrado
         // y no en la esquina superior-izquierda del área visible.
-        double scrollH = (poiX - viewW / 2) / (mapWidth  - viewW);
+        double scrollH = (poiX - viewW / 2) / (mapWidth - viewW);
         double scrollV = (poiY - viewH / 2) / (mapHeight - viewH);
 
         // Garantizamos que el valor esté dentro del rango válido [0, 1]
@@ -339,7 +336,7 @@ public class FXMLDocumentController implements Initializable {
         final Timeline timeline = new Timeline();
         final KeyValue kv1 = new KeyValue(map_scrollpane.hvalueProperty(), scrollH);
         final KeyValue kv2 = new KeyValue(map_scrollpane.vvalueProperty(), scrollV);
-        final KeyFrame kf  = new KeyFrame(Duration.millis(500), kv1, kv2);
+        final KeyFrame kf = new KeyFrame(Duration.millis(500), kv1, kv2);
         timeline.getKeyFrames().add(kf);
         timeline.play(); // Inicia la animación (no bloquea el hilo de la UI)
 
@@ -348,12 +345,11 @@ public class FXMLDocumentController implements Initializable {
     // =========================================================
     //  CONSTRUCCIÓN DEL MAPA
     // =========================================================
-
     /**
      * Carga una imagen y construye la jerarquía de nodos del mapa.
      *
-     * Este método puede llamarse varias veces (p. ej. al cambiar el mapa),
-     * ya que sustituye completamente el contenido del ScrollPane.
+     * Este método puede llamarse varias veces (p. ej. al cambiar el mapa), ya
+     * que sustituye completamente el contenido del ScrollPane.
      *
      * @param imgFile fichero de imagen a cargar como fondo del mapa
      */
@@ -361,7 +357,7 @@ public class FXMLDocumentController implements Initializable {
         // Comprobación defensiva: si el fichero no existe mostramos un aviso
         if (!imgFile.exists()) {
             map_scrollpane.setContent(
-                new Label("Imagen no encontrada: " + imgFile.getPath()));
+                    new Label("Imagen no encontrada: " + imgFile.getPath()));
             return;
         }
 
@@ -421,12 +417,11 @@ public class FXMLDocumentController implements Initializable {
     // =========================================================
     //  MENÚ CONTEXTUAL (clic derecho sobre el mapa)
     // =========================================================
-
     /**
      * Muestra el menú contextual reutilizable en la posición del clic.
      *
-     * Las acciones de los MenuItem se actualizan con las coordenadas
-     * del clic actual antes de mostrar el menú.
+     * Las acciones de los MenuItem se actualizan con las coordenadas del clic
+     * actual antes de mostrar el menú.
      *
      * @param x coordenada X del clic en el sistema local del mapPane
      * @param y coordenada Y del clic en el sistema local del mapPane
@@ -444,11 +439,11 @@ public class FXMLDocumentController implements Initializable {
 
         // Mostramos el menú en coordenadas de pantalla
         mapContextMenu.show(
-            mapPane.getScene().getWindow(),
-            mapPane.localToScreen(x, y).getX(),
-            mapPane.localToScreen(x, y).getY()
+                mapPane.getScene().getWindow(),
+                mapPane.localToScreen(x, y).getX(),
+                mapPane.localToScreen(x, y).getY()
         );
-        
+
         //Arreglar cuando esté actividades
         /*if (actividadActual != null) {
         guardarAnotacion(actividadActual, AnnotationType.POINT, "Punto interés", x, y);
@@ -458,24 +453,20 @@ public class FXMLDocumentController implements Initializable {
     // =========================================================
     //  INICIALIZACIÓN DEL CONTROLADOR
     // =========================================================
-
     /**
-     * Método llamado automáticamente por el FXMLLoader tras inyectar
-     * todos los elementos {@code @FXML}.
+     * Método llamado automáticamente por el FXMLLoader tras inyectar todos los
+     * elementos {@code @FXML}.
      *
-     * Aquí configuramos:
-     *  - El slider de zoom y su listener.
-     *  - El ContextMenu reutilizable (FIX 6).
-     *  - La CellFactory del ListView (FIX 4).
-     *  - La carga del mapa inicial.
+     * Aquí configuramos: - El slider de zoom y su listener. - El ContextMenu
+     * reutilizable (FIX 6). - La CellFactory del ListView (FIX 4). - La carga
+     * del mapa inicial.
      *
-     * @param url  URL del documento FXML (no usado aquí)
-     * @param rb   paquete de recursos de internacionalización (no usado aquí)
+     * @param url URL del documento FXML (no usado aquí)
+     * @param rb paquete de recursos de internacionalización (no usado aquí)
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         hijosDefaultVistas = new java.util.ArrayList<>(boxVistas.getChildren());
-        
 
         // ── Configuración del slider de zoom ──────────────────────────
         zoom_slider.setMin(0.5);   // zoom mínimo: 50 %
@@ -485,16 +476,16 @@ public class FXMLDocumentController implements Initializable {
         // Listener que invoca zoom() cada vez que el slider cambia de valor.
         // Usamos una expresión lambda en lugar de una clase anónima por brevedad.
         zoom_slider.valueProperty().addListener(
-            (observable, oldVal, newVal) -> zoom((Double) newVal)
+                (observable, oldVal, newVal) -> zoom((Double) newVal)
         );
 
         // Los items se crean aquí sin acción; las acciones se asignan
         // en onMapRightClick() con las coordenadas correctas de cada clic.
-        MenuItem miText   = new MenuItem("📝 Añadir texto");
+        MenuItem miText = new MenuItem("📝 Añadir texto");
         MenuItem miCircle = new MenuItem("⭕ Añadir círculo");
         mapContextMenu = new ContextMenu(miText, miCircle);
 
-               //  setCellFactory() define cómo se renderiza cada celda
+        //  setCellFactory() define cómo se renderiza cada celda
         //  de forma independiente al modelo Poi.
         //  Aquí mostramos "CÓDIGO – Nombre" en cada fila.
         map_listview.setCellFactory(listView -> new ListCell<Poi>() {
@@ -513,19 +504,18 @@ public class FXMLDocumentController implements Initializable {
                 }
             }
         });
-        
+
         //Codigo de los alumnos//
-        
         mapa_listview.getSelectionModel().selectedItemProperty().addListener((observable, oldMap, newMap) -> {
             if (newMap != null) {
                 File archivoImagen = new File(newMap.getImagePath());
-                
+
                 buildMap(archivoImagen);
-                
+
                 map_listview.getItems().clear();
             }
         });
-        
+
         actividades_listview.setCellFactory(lv -> new ListCell<Activity>() {
             @Override
             protected void updateItem(Activity item, boolean empty) {
@@ -537,34 +527,34 @@ public class FXMLDocumentController implements Initializable {
                 }
             }
         });
-        
+
         actividades_listview.getSelectionModel().selectedItemProperty().addListener((obs, oldAct, newAct) -> {
             if (newAct != null && mapa_listview.getSelectionModel().getSelectedItem() != null) {
                 // Borramos rutas anteriores para que no se superpongan
                 mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle && n != hoverMarker);
-                
+
                 cargarEstadisticas(newAct);
-                
+
                 this.currentProjection = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), mapPane.getWidth(), mapPane.getHeight());
                 setupHoverMarker();
                 loadElevationChart(newAct);
                 dibujarRuta(newAct, currentProjection);
             }
         });
-        
+
         buildMap(new File("maps/upv.jpg"));
         cargarListaMapas();
         setupHoverMarker();
-        
+
         mapa_listview.getSelectionModel().selectedItemProperty().addListener((observable, oldMap, newMap) -> {
             if (newMap != null) {
                 // Cambiamos la imagen del mapa
                 File archivoImagen = new File(newMap.getImagePath());
                 buildMap(archivoImagen);
-                
+
                 // Limpiamos rutas y estadísticas viejas
                 limpiarEstadisticas();
-                
+
                 // ¡Cargamos las actividades asociadas a este mapa!
                 cargarActividadesDelMapa(newMap);
             }
@@ -574,11 +564,10 @@ public class FXMLDocumentController implements Initializable {
     // =========================================================
     //  INDICADOR DE POSICIÓN DEL RATÓN
     // =========================================================
-
     /**
-     * Actualiza la etiqueta {@code mousePosition} con las coordenadas
-     * actuales del ratón, tanto en el sistema de la escena como en el
-     * sistema local del nodo sobre el que se mueve.
+     * Actualiza la etiqueta {@code mousePosition} con las coordenadas actuales
+     * del ratón, tanto en el sistema de la escena como en el sistema local del
+     * nodo sobre el que se mueve.
      *
      * Útil para depuración y para que los alumnos comprendan la diferencia
      * entre coordenadas de escena y coordenadas locales.
@@ -588,33 +577,31 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private void showPosition(MouseEvent event) {
         mousePosition.setText(
-            "sceneX: " + (int) event.getSceneX() +
-            ", sceneY: " + (int) event.getSceneY() + "\n" +
-            "         X: " + (int) event.getX() +
-            ",          Y: " + (int) event.getY()
+                "sceneX: " + (int) event.getSceneX()
+                + ", sceneY: " + (int) event.getSceneY() + "\n"
+                + "         X: " + (int) event.getX()
+                + ",          Y: " + (int) event.getY()
         );
     }
 
     // =========================================================
     //  DIÁLOGO "ACERCA DE"
     // =========================================================
-
     /**
      * Muestra un diálogo informativo con datos de la asignatura.
      *
-     * Nota: accedemos al Stage del diálogo para poder personalizar
-     * su icono, ya que Alert no expone directamente esa propiedad.
+     * Nota: accedemos al Stage del diálogo para poder personalizar su icono, ya
+     * que Alert no expone directamente esa propiedad.
      *
      * @param event evento de acción del menú
      */
-    @FXML
     private void about(ActionEvent event) {
         Alert mensaje = new Alert(Alert.AlertType.INFORMATION);
 
         // Personalizamos el icono de la ventana del diálogo
         Stage dialogStage = (Stage) mensaje.getDialogPane().getScene().getWindow();
         dialogStage.getIcons().add(
-            new Image(getClass().getResourceAsStream("/resources/logo.png"))
+                new Image(getClass().getResourceAsStream("/resources/logo.png"))
         );
 
         mensaje.setTitle("Acerca de");
@@ -625,10 +612,9 @@ public class FXMLDocumentController implements Initializable {
     // =========================================================
     //  AÑADIR UN POI (texto) AL MAPA
     // =========================================================
-
     /**
-     * Muestra un diálogo para introducir el nombre del nuevo POI,
-     * lo añade al ListView y dibuja su etiqueta sobre el mapa.
+     * Muestra un diálogo para introducir el nombre del nuevo POI, lo añade al
+     * ListView y dibuja su etiqueta sobre el mapa.
      *
      * @param x coordenada X del clic en el sistema local del mapPane
      * @param y coordenada Y del clic en el sistema local del mapPane
@@ -643,7 +629,7 @@ public class FXMLDocumentController implements Initializable {
         // Personalizamos el icono de la ventana del diálogo
         Stage dialogStage = (Stage) poiDialog.getDialogPane().getScene().getWindow();
         dialogStage.getIcons().add(
-            new Image(getClass().getResourceAsStream("/resources/logo.png"))
+                new Image(getClass().getResourceAsStream("/resources/logo.png"))
         );
 
         // Botones del diálogo: Aceptar y Cancelar
@@ -693,19 +679,17 @@ public class FXMLDocumentController implements Initializable {
     // =========================================================
     //  CAMBIAR EL MAPA (selector de fichero)
     // =========================================================
-
     /**
      * Abre un selector de fichero para que el usuario elija una imagen
      * diferente como mapa y reconstruye toda la vista.
      *
-     * FIX 3: se comprueba que imgFile no sea null antes de usarlo,
-     * evitando NullPointerException cuando el usuario cierra el FileChooser
-     * sin seleccionar ningún fichero.
+     * FIX 3: se comprueba que imgFile no sea null antes de usarlo, evitando
+     * NullPointerException cuando el usuario cierra el FileChooser sin
+     * seleccionar ningún fichero.
      *
      * @param event evento de acción del menú
      * @throws IOException si hay un problema al obtener la ruta canónica
      */
-    @FXML
     private void cambiarMapa(ActionEvent event) throws IOException {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(".")); // Empezamos en el directorio del proyecto
@@ -723,15 +707,13 @@ public class FXMLDocumentController implements Initializable {
     // =========================================================
     //  AÑADIR UN CÍRCULO AL MAPA
     // =========================================================
-
     /**
      * Dibuja un círculo rojo de radio 10 px en la posición indicada.
      *
      * Ejemplo sencillo de cómo añadir formas vectoriales (Shape) sobre el mapa.
-     * Los alumnos pueden extenderlo para:
-     *  - Elegir color dinámicamente.
-     *  - Asociar información al círculo (tooltip, popup, etc.).
-     *  - Permitir moverlo con arrastrar y soltar (drag and drop).
+     * Los alumnos pueden extenderlo para: - Elegir color dinámicamente. -
+     * Asociar información al círculo (tooltip, popup, etc.). - Permitir moverlo
+     * con arrastrar y soltar (drag and drop).
      *
      * @param x coordenada X en el sistema local del mapPane
      * @param y coordenada Y en el sistema local del mapPane
@@ -746,7 +728,6 @@ public class FXMLDocumentController implements Initializable {
     // =========================================================
     //  Aquí empieza el código del alumno
     // =========================================================
-    
     //Función para darle acción al EditarPErfil
     @FXML
     private void OnEditarPerfil(ActionEvent event) {
@@ -759,6 +740,7 @@ public class FXMLDocumentController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Editar Perfil - Running la Safor");
+            stage.setResizable(false);
 
             // Hacerla modal para que no se pueda interactuar con la principal hasta cerrar esta
             stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
@@ -768,24 +750,24 @@ public class FXMLDocumentController implements Initializable {
             System.err.println("Error al cargar el formulario de registro: " + e.getMessage());
         }
     }
-    
+
     @FXML
     private void mostrarAyuda(ActionEvent event) {
         Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-        
+
         alerta.setTitle("Ayuda general");
-        alerta.setHeaderText("Funciones de la aplicacion"); 
-        
+        alerta.setHeaderText("Funciones de la aplicacion");
+
         alerta.setContentText("• Puedes elegir entre los diferentes mapas y se mostrarán tus actividades \n"
-                            + "• En la pestaña mapas puedes añadir más o borrarlos \n"
-                            + "• Con click derecho sobre el mapa puedes hacer anotaciones \n"
-                            + "• En el apartado de usuario puedes cerrar sesion o modificar perfil \n"
-                            + "• Moviendo el ratón por la línea de desnivel (abajo de la imagen del mapa) puedes ver el trazado de la actividad \n"
-                            + "• El botón home (el icono de la casa), te sirve para retornar del apartado de sesiones al menú principal \n");
+                + "• En la pestaña mapas puedes añadir más o borrarlos \n"
+                + "• Con click derecho sobre el mapa puedes hacer anotaciones \n"
+                + "• En el apartado de usuario puedes cerrar sesion o modificar perfil \n"
+                + "• Moviendo el ratón por la línea de desnivel (abajo de la imagen del mapa) puedes ver el trazado de la actividad \n"
+                + "• El botón home (el icono de la casa), te sirve para retornar del apartado de sesiones al menú principal \n");
 
         alerta.showAndWait();
     }
-    
+
     @FXML
     private void OnCerrarSesion(ActionEvent event) {
         try {
@@ -810,8 +792,12 @@ public class FXMLDocumentController implements Initializable {
     private void onMapsButton(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/mapademo/FXMLMapa.fxml"));
-            Parent vistaMapas = loader.load();
-            splitPane.getScene().setRoot(vistaMapas);
+            javafx.scene.Node vista = loader.load();
+            FXMLMapaController controller = loader.getController();
+            
+            boxVistas.getChildren().clear();
+            boxVistas.getChildren().add(vista);
+            
         } catch (IOException e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -821,7 +807,7 @@ public class FXMLDocumentController implements Initializable {
             alert.showAndWait();
         }
     }
-    
+
     @FXML
     private void onClickSesiones(ActionEvent event) {
 
@@ -841,8 +827,8 @@ public class FXMLDocumentController implements Initializable {
             e.printStackTrace();
         }
     }
-    
-     private void cargarEstadisticas(Activity activity) {
+
+    private void cargarEstadisticas(Activity activity) {
         lblDistanciaTotal.setText(
                 String.format("%.2f km", activity.getTotalDistance() / 1000.0));
 
@@ -867,7 +853,7 @@ public class FXMLDocumentController implements Initializable {
         lblAltitudMin.setText(
                 String.format("%.0f m", activity.getMinElevation()));
     }
-     
+
     private void limpiarEstadisticas() {
         lblDistanciaTotal.setText("- km");
         lblDuracion.setText("-");
@@ -878,7 +864,7 @@ public class FXMLDocumentController implements Initializable {
         lblAltitudMax.setText("- m");
         lblAltitudMin.setText("- m");
     }
-    
+
     @FXML
     private void onImportarGpx(ActionEvent event) {
         mostrarHome();
@@ -893,26 +879,26 @@ public class FXMLDocumentController implements Initializable {
         if (gpxFile != null) {
             // Esto lo guarda automáticamente en la base de datos
             Activity activity = app.importActivity(gpxFile);
-            
+
             if (activity != null) {
                 // Seleccionamos el mapa al que pertenece esta nueva actividad
                 MapRegion regionSugerida = activity.getSuggestedMap();
                 mapa_listview.getSelectionModel().select(regionSugerida);
-                
+
                 // Refrescamos la lista de actividades para que aparezca
                 cargarActividadesDelMapa(regionSugerida);
-                
+
                 // Seleccionamos la actividad automáticamente para que se dibuje
                 actividades_listview.getSelectionModel().select(activity);
-                
+
                 Alert a = new Alert(Alert.AlertType.INFORMATION, "¡Actividad importada y guardada con éxito!");
                 a.showAndWait();
-                setupHoverMarker();             
-                loadElevationChart(activity); 
+                setupHoverMarker();
+                loadElevationChart(activity);
             }
         }
     }
-    
+
     private void mostrarHome() {
         boxVistas.getChildren().clear();
         for (javafx.scene.Node n : hijosDefaultVistas) {
@@ -920,12 +906,11 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
-    
     @FXML
     private void onBorrarGpx(ActionEvent event) {
         // 1. Obtenemos la actividad que el usuario ha seleccionado en la lista
         Activity actividadSeleccionada = actividades_listview.getSelectionModel().getSelectedItem();
-        
+
         // Si no ha seleccionado ninguna, le avisamos y no hacemos nada
         if (actividadSeleccionada == null) {
             Alert alerta = new Alert(Alert.AlertType.WARNING);
@@ -943,25 +928,25 @@ public class FXMLDocumentController implements Initializable {
         confirmacion.setContentText("Esta acción eliminará la actividad de tu base de datos y no se puede deshacer.");
 
         Optional<ButtonType> resultado = confirmacion.showAndWait();
-        
+
         // 3. Si el usuario pulsa "Aceptar"
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            
+
             // Borramos la actividad de la base de datos
             app.removeActivity(actividadSeleccionada);
-            
+
             // Refrescamos la lista de actividades del mapa actual para que desaparezca
             MapRegion mapaActual = mapa_listview.getSelectionModel().getSelectedItem();
             if (mapaActual != null) {
                 cargarActividadesDelMapa(mapaActual);
             }
-            
+
             // Limpiamos el mapa (borramos la línea de la ruta y los círculos verdes/rojos)
             mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle);
-            
+
             // Reseteamos las estadísticas para que queden a cero
             limpiarEstadisticas();
-            
+
             // Mostramos mensaje de éxito
             Alert exito = new Alert(Alert.AlertType.INFORMATION);
             exito.setTitle("Éxito");
@@ -970,7 +955,7 @@ public class FXMLDocumentController implements Initializable {
             exito.showAndWait();
         }
     }
-    
+
     private void dibujarRuta(Activity activity, MapProjection mapa) {
         javafx.scene.shape.Polyline ruta = new javafx.scene.shape.Polyline();
         ruta.setStroke(Color.BLUE);
@@ -1001,7 +986,6 @@ public class FXMLDocumentController implements Initializable {
         });
     }
 
-    
     private void cargarListaMapas() {
         List<MapRegion> regiones = app.getMapRegions();
         if (regiones != null) {
@@ -1016,20 +1000,20 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
-    
+
     @FXML
     private void onHome(MouseEvent event) {
 
         mostrarHome();
     }
-    
+
     private void cargarActividadesDelMapa(MapRegion mapa) {
         // Vaciamos la lista actual
         actividades_listview.getItems().clear();
-        
+
         // Pedimos TODAS las actividades del usuario actual
         List<Activity> misActividades = app.getUserActivities();
-        
+
         // Filtramos solo las que pertenecen a este mapa
         if (misActividades != null) {
             for (Activity act : misActividades) {
@@ -1040,6 +1024,7 @@ public class FXMLDocumentController implements Initializable {
             }
         }
     }
+
     private void setupHoverMarker() {
         if (hoverMarker != null) {
             mapPane.getChildren().remove(hoverMarker);
@@ -1073,7 +1058,9 @@ public class FXMLDocumentController implements Initializable {
             dato.nodeProperty().addListener((obs, oldNode, newNode) -> {
                 if (newNode != null) {
                     newNode.setOnMouseEntered(e -> {
-                        if (currentProjection == null || hoverMarker == null) return;
+                        if (currentProjection == null || hoverMarker == null) {
+                            return;
+                        }
                         Point2D pixel = currentProjection.project(points.get(idx));
                         hoverMarker.setCenterX(pixel.getX());
                         hoverMarker.setCenterY(pixel.getY());
@@ -1089,7 +1076,9 @@ public class FXMLDocumentController implements Initializable {
         elevationChart.getData().add(series);
 
         elevationChart.setOnMouseExited(e -> {
-            if (hoverMarker != null) hoverMarker.setVisible(false);
+            if (hoverMarker != null) {
+                hoverMarker.setVisible(false);
+            }
         });
     }
 }

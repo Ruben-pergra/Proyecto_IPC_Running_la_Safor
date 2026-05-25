@@ -19,11 +19,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="rootVbox" onMouseClicked="#actualizarRootVbox" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLEditarPerfilController">
+<VBox fx:id="rootVbox" onMouseClicked="#actualizarRootVbox" prefHeight="585.0" prefWidth="599.0" styleClass="root-pane" stylesheets="@../resources/estiloMain.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLEditarPerfilController">
    <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #0081B4;">
+      <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="599.0" styleClass="hbox_franja">
          <children>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Editar perfil">
+            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="titulo-principal" text="Editar perfil">
                <font>
                   <Font name="Arial Rounded MT Bold" size="36.0" />
                </font>
@@ -39,104 +39,109 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </HBox>
-      <GridPane prefHeight="500.0" prefWidth="600.0" vgap="20.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="427.0" minWidth="10.0" prefWidth="319.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.0" minWidth="10.0" prefWidth="221.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="71.0" minHeight="10.0" prefHeight="59.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="62.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="41.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="43.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
-               <children>
-                  <Label text="Avatar" textAlignment="CENTER" textFill="#0303eb">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin></Label>
-                  <ImageView fx:id="avatarImageView" fitHeight="50.0" fitWidth="100.0" onMouseClicked="#pickAvatar" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: HAND;">
-                     <image>
-                        <Image url="@../resources/icono_avatar.jpg" />
-                     </image>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </ImageView>
-                  <Label text="(opcional)" textFill="#433c3c" />
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <Label text="Nickname" textFill="#0303eb" />
-                  <TextField fx:id="nicknameField" editable="false">
-                     <cursor>
-                        <Cursor fx:constant="DISAPPEAR" />
-                     </cursor></TextField>
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
-               <children>
-                  <Label text="Email" textFill="#0303eb" />
-                  <TextField fx:id="emailField" />
-                  <Label fx:id="emailError" text="Del tipo usuario@dominio" textFill="#e30b0b" />
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
-               <children>
-                  <Label text="Password" textFill="#150ae8" />
-                  <PasswordField fx:id="passwordField">
-                     <VBox.margin>
-                        <Insets right="300.0" />
-                     </VBox.margin>
-                  </PasswordField>
-                  <Label fx:id="passwordError" text="Entre 8 y 20 caracteres, mayuscula, minuscula, simbolo y digito" textFill="#f20c0c" />
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
-               <children>
-                  <Label text="Repeat Password" textFill="#1a13e8" />
-                  <PasswordField fx:id="passwordConfirmField">
-                     <VBox.margin>
-                        <Insets right="80.0" />
-                     </VBox.margin>
-                  </PasswordField>
-                  <Label fx:id="passwordConfirmError" text="Las contraseñas no coinciden" textFill="#dd0808" />
-               </children>
-            </VBox>
-            <Separator prefWidth="200.0" GridPane.rowIndex="4" />
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="5">
-               <children>
-                  <Label text="Birthdate" textFill="#1d06ee" />
-                  <DatePicker fx:id="dateField" />
-                  <Label fx:id="dateError" text="Debe ser mayor de 12 años" textFill="#da0606" />
-               </children>
-            </VBox>
-            <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
-               <children>
-                  <Button fx:id="bAccept" mnemonicParsing="false" onAction="#handleBAcceptOnAction" style="-fx-background-color: #0081B4;" text="Aceptar" textFill="WHITE" />
-                  <Button fx:id="bCancel" mnemonicParsing="false" style="-fx-background-color: #0081B4;" text="Cancel" textAlignment="RIGHT" textFill="WHITE">
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
-               </GridPane.margin>
-            </HBox>
-         </children>
+      <VBox>
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin>
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-      </GridPane>
+         <children>
+            <GridPane prefHeight="500.0" prefWidth="600.0" vgap="30.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="427.0" minWidth="10.0" prefWidth="319.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.0" minWidth="10.0" prefWidth="221.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="62.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="41.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="43.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <ImageView fx:id="avatarImageView" fitHeight="112.0" fitWidth="127.0" onMouseClicked="#pickAvatar" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: HAND;">
+                           <image>
+                              <Image url="@../resources/user-_1_.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
+                        <Label text="Avatar" textAlignment="CENTER" textFill="#0303eb">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label text="Usuario:" textFill="#0303eb" />
+                        <TextField fx:id="nicknameField" editable="false">
+                           <cursor>
+                              <Cursor fx:constant="DISAPPEAR" />
+                           </cursor>
+                        </TextField>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+                     <children>
+                        <Label text="Correo:" textFill="#0303eb" />
+                        <TextField fx:id="emailField" />
+                        <Label fx:id="emailError" styleClass="label-error" text="Del tipo usuario@dominio" textFill="#e30b0b" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                     <children>
+                        <Label text="Contraseña:" textFill="#150ae8" />
+                        <PasswordField fx:id="passwordField">
+                           <VBox.margin>
+                              <Insets right="300.0" />
+                           </VBox.margin>
+                        </PasswordField>
+                        <Label fx:id="passwordError" styleClass="label-error" text="Entre 8 y 20 caracteres, mayuscula, minuscula, simbolo y digito" textFill="#f20c0c" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
+                     <children>
+                        <Label text="Repita la contraseña:" textFill="#1a13e8" />
+                        <PasswordField fx:id="passwordConfirmField">
+                           <VBox.margin>
+                              <Insets right="80.0" />
+                           </VBox.margin>
+                        </PasswordField>
+                        <Label fx:id="passwordConfirmError" styleClass="label-error" text="Las contraseñas no coinciden" textFill="#dd0808" />
+                     </children>
+                  </VBox>
+                  <Separator prefWidth="200.0" GridPane.rowIndex="4" />
+                  <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="5">
+                     <children>
+                        <Label text="Fecha de nacimiento:" textFill="#1d06ee" />
+                        <DatePicker fx:id="dateField" />
+                        <Label fx:id="dateError" styleClass="label-error" text="Debe ser mayor de 12 años" textFill="#da0606" />
+                     </children>
+                  </VBox>
+                  <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                     <children>
+                        <Button fx:id="bAccept" defaultButton="true" mnemonicParsing="false" onAction="#handleBAcceptOnAction" styleClass="button-accent" text="Aceptar" textFill="WHITE" />
+                        <Button fx:id="bCancel" cancelButton="true" mnemonicParsing="false" text="Cancel" textAlignment="RIGHT" textFill="WHITE">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <GridPane.margin>
+                        <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
+                     </GridPane.margin>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </GridPane>
+         </children>
+      </VBox>
    </children>
 </VBox>
