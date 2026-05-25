@@ -58,6 +58,13 @@ public class SesionesController implements Initializable {
     private Label lblFooterVistas;
     @FXML
     private Label lblFooterAnotaciones;
+    
+    
+    private int actividadesVistasActual = 0;
+
+    public void setActividadesVistas(int n) {
+        this.actividadesVistasActual = n;
+    }
 
     /**
      * Initializes the controller class.
@@ -116,6 +123,18 @@ public class SesionesController implements Initializable {
         List<Session> sessions = app.getSessionsByUser(user);
         ObservableList<Session> data
                 = FXCollections.observableArrayList(sessions);
+        
+        
+        if (!data.isEmpty()) {
+            colVistas.setCellValueFactory(cell -> {
+                Session s = cell.getValue();
+                boolean esPrimera = data.indexOf(s) == 0;
+                int vistas = esPrimera
+                    ? (int) s.getViewedActivities() + actividadesVistasActual
+                     : (int) s.getViewedActivities();
+                return new SimpleStringProperty(String.valueOf(vistas));
+            });
+        }
 
         tableView.setItems(data);
 
@@ -137,9 +156,9 @@ public class SesionesController implements Initializable {
         lblFooterDuracion.setText(Utils.formatDuration(totalDur));
         lblFooterImportadas.setText(String.valueOf(totalImp));
 
-        long totalVis = sessions.stream()
-                .mapToLong(Session::getViewedActivities).sum();
-        lblFooterVistas.setText(String.valueOf(totalVis));
+        long totalVis = sessions.stream().mapToLong(Session::getViewedActivities).sum();
+        long totalVisConActual = totalVis + actividadesVistasActual;
+        lblFooterVistas.setText(String.valueOf(totalVisConActual));
         lblFooterAnotaciones.setText(String.valueOf(totalAnn));
     }
 

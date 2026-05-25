@@ -227,6 +227,8 @@ public class FXMLDocumentController implements Initializable {
     private Activity actividadActual;
     private final Map<javafx.scene.Node, Annotation> nodosAnotacion = new HashMap<>();
     
+    private int actividadesVistas = 0;
+    
     // =========================================================
     //  MANEJADORES DE ZOOM
     // =========================================================
@@ -508,7 +510,9 @@ public class FXMLDocumentController implements Initializable {
             if (newAct != null && mapa_listview.getSelectionModel().getSelectedItem() != null) {
                 
                 this.actividadActual = newAct;
-                // Borramos rutas anteriores para que no se superpongan
+                if (oldAct != newAct) {               
+                    actividadesVistas++;              
+                }                                     
                 mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle && n != hoverMarker);
                 
                 cargarEstadisticas(newAct);
@@ -741,6 +745,7 @@ public class FXMLDocumentController implements Initializable {
             );
             javafx.scene.Node vista = loader.load();
             SesionesController controller = loader.getController();
+            controller.setActividadesVistas(actividadesVistas);
             controller.onEnter();
 
             boxVistas.getChildren().clear();
