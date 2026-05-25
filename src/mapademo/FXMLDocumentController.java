@@ -80,6 +80,11 @@ import upv.ipc.sportlib.MapProjection;
 import upv.ipc.sportlib.MapRegion;
 import upv.ipc.sportlib.SportActivityApp;
 import upv.ipc.sportlib.TrackPoint;
+import upv.ipc.sportlib.Annotation;
+import upv.ipc.sportlib.AnnotationType;
+import upv.ipc.sportlib.GeoPoint;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Controlador principal de la aplicación de mapa con POIs.
@@ -216,6 +221,9 @@ public class FXMLDocumentController implements Initializable {
     private NumberAxis yAxis;
     private MapProjection currentProjection;
     private Circle hoverMarker;
+    
+    private Activity actividadActual;
+    private final Map<javafx.scene.Node, Annotation> nodosAnotacion = new HashMap<>();
 
     // =========================================================
     //  MANEJADORES DE ZOOM
@@ -433,8 +441,10 @@ public class FXMLDocumentController implements Initializable {
         // Usamos variables final para que el lambda pueda capturarlas.
         final double clickX = x;
         final double clickY = y;
-        mapContextMenu.getItems().get(0).setOnAction(e -> addPoi(clickX, clickY));
-        mapContextMenu.getItems().get(1).setOnAction(e -> addCircle(clickX, clickY));
+        mapContextMenu.getItems().get(0).setOnAction(e -> abrirDialogoAnotacion(AnnotationType.POINT,  clickX, clickY));
+        mapContextMenu.getItems().get(1).setOnAction(e -> abrirDialogoAnotacion(AnnotationType.TEXT,   clickX, clickY));
+        mapContextMenu.getItems().get(2).setOnAction(e -> abrirDialogoAnotacion(AnnotationType.LINE,   clickX, clickY));
+        mapContextMenu.getItems().get(3).setOnAction(e -> abrirDialogoAnotacion(AnnotationType.CIRCLE, clickX, clickY));
 
         // Mostramos el menú en coordenadas de pantalla
         mapContextMenu.show(
@@ -442,11 +452,7 @@ public class FXMLDocumentController implements Initializable {
             mapPane.localToScreen(x, y).getX(),
             mapPane.localToScreen(x, y).getY()
         );
-        
-        //Arreglar cuando esté actividades
-        /*if (actividadActual != null) {
-        guardarAnotacion(actividadActual, AnnotationType.POINT, "Punto interés", x, y);
-        }*/
+       
     }
 
     // =========================================================
@@ -482,9 +488,11 @@ public class FXMLDocumentController implements Initializable {
 
         // Los items se crean aquí sin acción; las acciones se asignan
         // en onMapRightClick() con las coordenadas correctas de cada clic.
+        MenuItem miPoint  = new MenuItem("📍 Añadir punto");
         MenuItem miText   = new MenuItem("📝 Añadir texto");
+        MenuItem miLine   = new MenuItem("📏 Añadir línea");
         MenuItem miCircle = new MenuItem("⭕ Añadir círculo");
-        mapContextMenu = new ContextMenu(miText, miCircle);
+        mapContextMenu = new ContextMenu(miPoint, miText, miLine, miCircle);
 
                //  setCellFactory() define cómo se renderiza cada celda
         //  de forma independiente al modelo Poi.
@@ -540,6 +548,7 @@ public class FXMLDocumentController implements Initializable {
         actividades_listview.getSelectionModel().selectedItemProperty().addListener((obs, oldAct, newAct) -> {
             if (newAct != null && mapa_listview.getSelectionModel().getSelectedItem() != null) {
                 // Limpiamos el mapa de rutas o círculos anteriores
+                actividadActual = newAct;
                 mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle);
                 
                 // Cargamos estadísticas y dibujamos
@@ -881,6 +890,7 @@ public class FXMLDocumentController implements Initializable {
         if (gpxFile != null) {
             Activity activity = app.importActivity(gpxFile);
             if (activity != null) {
+                actividadActual = activity;
                 MapRegion region = activity.getSuggestedMap();
                 buildMap(new File(region.getImagePath()));
                 cargarEstadisticas(activity);
@@ -1034,11 +1044,171 @@ public class FXMLDocumentController implements Initializable {
     MapProjection proj = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), 
                                            mapPane.getWidth(), mapPane.getHeight());
     GeoPoint geoP = proj.unproject(x, y);
+*/
+    //2. Crear la anotación
+    //Annotation ann = new Annotation(tipo, texto, "#FF0000", 2.0, List.of(geoP));
+    
+    private void abrirDialogoAnotacion(AnnotationType tipo, double x, double y) {
+        if (actividadActual == null || currentProjection == null) {
+            Alert aviso = new Alert(Alert.AlertType.WARNING);
+            aviso.setTitle("Sin actividad");
+            aviso.setHeaderText(null);
+            aviso.setContentText("Importa o selecciona una actividad antes de añadir anotaciones.");
+            aviso.showAndWait();
+            return;
+        }
 
-    // 2. Crear la anotación
-    Annotation ann = new Annotation(tipo, texto, "#FF0000", 2.0, List.of(geoP));
+        // ── Diálogo para texto y color ────────────────────────────
+        Dialog<String[]> dialog = new Dialog<>();
+        dialog.setTitle("Nueva anotación");
+        dialog.setHeaderText("Tipo: " + tipo.name());
+
+        ButtonType okBtn = new ButtonType("Aceptar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okBtn, ButtonType.CANCEL);
+
+        TextField textoField = new TextField();
+        textoField.setPromptText("Texto de la anotación (opcional)");
+
+        javafx.scene.control.ColorPicker colorPicker = new javafx.scene.control.ColorPicker(Color.RED);
+
+        VBox contenido = new VBox(10,
+            new Label("Texto:"), textoField,
+            new Label("Color:"), colorPicker
+        );
+        dialog.getDialogPane().setContent(contenido);
+
+        dialog.setResultConverter(btn -> {
+            if (btn == okBtn) {
+                // Convertimos Color de JavaFX a formato CSS hex (#RRGGBB)
+                Color c = colorPicker.getValue();
+                String hex = String.format("#%02X%02X%02X",
+                    (int)(c.getRed()   * 255),
+                    (int)(c.getGreen() * 255),
+                    (int)(c.getBlue()  * 255));
+                return new String[]{ textoField.getText().trim(), hex };
+            }
+            return null;
+        });
+
+        Optional<String[]> resultado = dialog.showAndWait();
+        if (resultado.isEmpty()) return;
+
+        String texto = resultado.get()[0];
+        String color = resultado.get()[1];
+
+        // ── Convertir píxeles → coordenadas GPS ──────────────────
+        GeoPoint geo = currentProjection.unproject(x, y);
+
+    
+        List<GeoPoint> puntos = (tipo == AnnotationType.LINE || tipo == AnnotationType.CIRCLE)
+            ? List.of(geo, geo)
+            : List.of(geo);
+
+        //── Crear y persistir la anotación ───────────────────────
+        Annotation ann = new Annotation(tipo, texto, color, 2.0, puntos);
+        Annotation guardada = app.addAnnotation(actividadActual, ann);
+
+        if (guardada != null) {
+            dibujarAnotacion(guardada, x, y, color);
+        }
+    }
+
+    private void dibujarAnotacion(Annotation ann, double x, double y, String colorHex) {
+        Color color = Color.web(colorHex);
+
+        switch (ann.getType()) {
+            case POINT -> {
+                Circle punto = new Circle(8, color);
+                punto.setCenterX(x);
+                punto.setCenterY(y);
+                punto.setOpacity(0.85);
+                registrarNodoAnotacion(punto, ann);
+                mapPane.getChildren().add(punto);
+
+                if (!ann.getText().isEmpty()) {
+                    Text label = new Text(ann.getText());
+                    label.setX(x + 10);
+                    label.setY(y - 5);
+                    label.setFill(color);
+                    registrarNodoAnotacion(label, ann);
+                    mapPane.getChildren().add(label);
+                }
+            }
+            case TEXT -> {
+                Text label = new Text(ann.getText().isEmpty() ? "Anotación" : ann.getText());
+                label.setX(x);
+                label.setY(y);
+                label.setFill(color);
+                label.setStyle("-fx-font-size: 13px; -fx-font-weight: bold;");
+                registrarNodoAnotacion(label, ann);
+                mapPane.getChildren().add(label);
+            }
+            case LINE -> {
+                javafx.scene.shape.Line linea = new javafx.scene.shape.Line(x - 20, y, x + 20, y);
+                linea.setStroke(color);
+                linea.setStrokeWidth(2);
+                registrarNodoAnotacion(linea, ann);
+                mapPane.getChildren().add(linea);
+
+                if (!ann.getText().isEmpty()) {
+                    Text label = new Text(ann.getText());
+                    label.setX(x + 5);
+                    label.setY(y - 5);
+                    label.setFill(color);
+                    registrarNodoAnotacion(label, ann);
+                    mapPane.getChildren().add(label);
+                }
+            }
+            case CIRCLE -> {
+                Circle circulo = new Circle(15);
+                circulo.setCenterX(x);
+                circulo.setCenterY(y);
+                circulo.setFill(Color.TRANSPARENT);
+                circulo.setStroke(color);
+                circulo.setStrokeWidth(2);
+                registrarNodoAnotacion(circulo, ann);
+                mapPane.getChildren().add(circulo);
+
+                if (!ann.getText().isEmpty()) {
+                    Text label = new Text(ann.getText());
+                    label.setX(x + 17);
+                    label.setY(y);
+                    label.setFill(color);
+                    registrarNodoAnotacion(label, ann);
+                    mapPane.getChildren().add(label);
+                }
+            }
+        }
+    }
+    
+    private void registrarNodoAnotacion(javafx.scene.Node nodo, Annotation ann) {
+        nodosAnotacion.put(nodo, ann);
+
+        MenuItem miEliminar = new MenuItem("🗑 Eliminar anotación");
+        ContextMenu menuBorrar = new ContextMenu(miEliminar);
+
+        miEliminar.setOnAction(e -> {
+            app.removeAnnotation(ann);
+
+            List<javafx.scene.Node> aEliminar = nodosAnotacion.entrySet().stream()
+                .filter(entry -> entry.getValue().getId() == ann.getId())
+                .map(Map.Entry::getKey)
+                .toList();
+
+            mapPane.getChildren().removeAll(aEliminar);
+            aEliminar.forEach(nodosAnotacion::remove);
+        });
+
+        nodo.setOnMouseClicked(ev -> {
+            if (ev.getButton() == MouseButton.SECONDARY) {
+                mapContextMenu.hide(); // evita que se abra el menú general del mapa
+                menuBorrar.show(nodo, ev.getScreenX(), ev.getScreenY());
+                ev.consume();          // para la propagación al mapPane
+            }
+        });
+    }
 
     // 3. Persistir en la BDD
-    app.addAnnotation(actividad, ann); // 
-    }*/
+    //app.addAnnotation(actividad, ann); // 
+    //}
 }
