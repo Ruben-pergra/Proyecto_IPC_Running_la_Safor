@@ -927,10 +927,6 @@ public class FXMLDocumentController implements Initializable {
         javafx.scene.chart.XYChart.Series<Number, Number> series = new javafx.scene.chart.XYChart.Series<>();
         series.setName("Altitud");
 
-    // 3. Persistir en la BDD
-    app.addAnnotation(actividad, ann); // 
-    }*/
-}
         List<TrackPoint> points = activity.getTrackPoints();
         double distAcum = 0.0;
 
