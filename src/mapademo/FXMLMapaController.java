@@ -34,7 +34,7 @@ import javafx.scene.Parent;
 /**
  * FXML Controller class
  *
- * @author Javier
+ * @author charlottediaz
  */
 public class FXMLMapaController implements Initializable {
 
@@ -75,16 +75,14 @@ public class FXMLMapaController implements Initializable {
     
     private final SportActivityApp app = SportActivityApp.getInstance();
 
-    // Lista observable que alimenta la tabla
     private final ObservableList<MapRegion> mapaList =
             FXCollections.observableArrayList();
     @FXML
     private Button backButton;
 
-
-    /**
-     * Initializes the controller class.
-     */
+    // Establece las columnas que se han de rellenar para añadir un mapa
+    // Carga los mapas de la bdd
+    // Escucha si se puede dejar de deshabilitar el botón de delete
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -102,7 +100,7 @@ public class FXMLMapaController implements Initializable {
                 new PropertyValueFactory<>("lonMin"));
 
         
-         mapTable.setItems(mapaList);
+        mapTable.setItems(mapaList);
         cargarMapas();
         
         formGrid.setDisable(true);
@@ -114,6 +112,7 @@ public class FXMLMapaController implements Initializable {
 
     }   
 
+    //Carga la lista de los mapas de la bdd
     private void cargarMapas() {
         mapaList.clear();
         List<MapRegion> regiones = app.getMapRegions();
@@ -122,7 +121,7 @@ public class FXMLMapaController implements Initializable {
         }
     }
 
-
+    // Acción de añadir mapa
     @FXML
     private void ddAction(ActionEvent event) {
         formGrid.setDisable(false);
@@ -130,6 +129,7 @@ public class FXMLMapaController implements Initializable {
 
     }
 
+    // Borrar mapa tanto de la lista como de la bdd
     @FXML
     private void deleteAction(ActionEvent event) {
         MapRegion seleccionado = mapTable.getSelectionModel().getSelectedItem();
@@ -155,9 +155,9 @@ public class FXMLMapaController implements Initializable {
         });
     }
 
+    // Importar el mapa a la bdd con todos sus parámetros establecidos por el usuario
     @FXML
     private void importAction(ActionEvent event) {
-// Validar fichero
         String rutaFichero = fileTextField.getText().trim();
         if (rutaFichero.isEmpty()) {
             mostrarError("Selecciona un fichero de imagen.");
@@ -169,7 +169,6 @@ public class FXMLMapaController implements Initializable {
             return;
         }
 
-        // Validar coordenadas
         double latMax, latMin, lonMax, lonMin;
         try {
             latMax = Double.parseDouble(latMaxField.getText().trim());
@@ -191,12 +190,10 @@ public class FXMLMapaController implements Initializable {
             return;
         }
 
-        // Nombre del mapa = nombre del fichero sin extensión
         String nombre = imageFile.getName();
         int punto = nombre.lastIndexOf('.');
         if (punto > 0) nombre = nombre.substring(0, punto);
 
-        // Añadir a la BD mediante la librería
         MapRegion nueva = app.addMapRegion(
                 nombre, imageFile, latMin, latMax, lonMin, lonMax);
 
@@ -212,6 +209,7 @@ public class FXMLMapaController implements Initializable {
 
     }
 
+    // Elegir fichero de imagen
     @FXML
     private void browseAction(ActionEvent event) {
                FileChooser fc = new FileChooser();
@@ -226,8 +224,8 @@ public class FXMLMapaController implements Initializable {
         } 
     }
     
-    
-        private void limpiarFormulario() {
+    // Limpia los valores
+    private void limpiarFormulario() {
         fileTextField.clear();
         latMaxField.clear();
         latMinField.clear();
@@ -235,6 +233,7 @@ public class FXMLMapaController implements Initializable {
         lonMinField.clear();
     }
 
+    // Muestra el error
     private void mostrarError(String mensaje) {
         Alert a = new Alert(Alert.AlertType.ERROR);
         a.setTitle("Error");

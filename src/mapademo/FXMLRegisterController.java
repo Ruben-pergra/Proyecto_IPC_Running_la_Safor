@@ -99,7 +99,6 @@ public class FXMLRegisterController implements Initializable {
     //Avatar//
     @FXML
     private ImageView avatarImageView;
-    //Para guardar la ruta q irá luego a la librería
     private String selectedAvatarPath = "";
     
     //RootVbox//
@@ -111,8 +110,6 @@ public class FXMLRegisterController implements Initializable {
         field.setStyle(((isValid) ? "" : "-fx-background-color: #FCE5E0"));
     }
 
-    //=========================================================
-    // you must initialize here all related with the object 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Email //
@@ -123,9 +120,9 @@ public class FXMLRegisterController implements Initializable {
         emailError.setVisible(false);
         nicknameError.setVisible(false);
 
-        //Check values when user leaves edits
+        // Checkea los valroes al salir de la caja de texto
         emailField.focusedProperty().addListener((observable, oldValue, newValue)->{
-        if(!newValue){ //focus lost
+        if(!newValue){
             checkEmail();
             if (!validEmail.get()) {
                 if (listenerEmail == null) {
@@ -140,6 +137,7 @@ public class FXMLRegisterController implements Initializable {
         validPassword = new SimpleBooleanProperty(false); 
         passwordError.setVisible(false);
 
+        // Checkea los valroes al salir de la caja de texto
         passwordField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 checkPassword();
@@ -157,6 +155,7 @@ public class FXMLRegisterController implements Initializable {
         confirmPasswords = new SimpleBooleanProperty(false);
         passwordConfirmError.setVisible(false);
 
+        // Checkea los valroes al salir de la caja de texto
         passwordConfirmField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 checkPasswordsMatch();
@@ -178,6 +177,7 @@ public class FXMLRegisterController implements Initializable {
         validDate = new SimpleBooleanProperty(false);
         dateError.setVisible(false);
 
+        // Checkea los valroes al salir de la caja de texto
         dateField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 checkDate();
@@ -192,8 +192,9 @@ public class FXMLRegisterController implements Initializable {
         });
         
         //Nickname//
+        // Checkea los valroes al salir de la caja de texto
         nicknameField.focusedProperty().addListener((obs, oldV, newV) -> {
-            if(!newV){ //focus lost
+            if(!newV){
             checkNickname();
             if (!validNickname.get()) {
                 if (listenerNickname == null) {
@@ -220,6 +221,7 @@ public class FXMLRegisterController implements Initializable {
             });
         
     }
+    
     private void checkEmail(){
         String email = emailField.getText();
         boolean isValid = User.checkEmail(email);
@@ -261,9 +263,9 @@ public class FXMLRegisterController implements Initializable {
     showError(isValid, nicknameField, nicknameError);
     }
     
+    // Al aceptar establece los campos, loguea y cierra la ventara
     @FXML
     private void handleBAcceptOnAction(ActionEvent event) {
-        //Obtenemos la instancia única para conectar con la base de datos
         SportActivityApp app = SportActivityApp.getInstance();
         boolean success = app.registerUser(
         nicknameField.getText(),
@@ -284,6 +286,7 @@ public class FXMLRegisterController implements Initializable {
         
     }
     
+    // Deja elegir el avatar en los archivos
     @FXML
     private void pickAvatar(MouseEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -303,6 +306,7 @@ public class FXMLRegisterController implements Initializable {
         }
     }
     
+    // Actualiza al clickar fuera de las cajas de texto
     @FXML
     private void actualizarRootVbox(MouseEvent event) {
         rootVbox.requestFocus(); 

@@ -29,30 +29,27 @@ public class FXMLInicioController implements Initializable {
         
     }
     
+    // Al darle al botón de registrarse te abre la ventana y se mantiene en espera
+    // Al terminar la acción de registrarse, cierra las ventanas y abre la principal
     @FXML
     private void OnRegistrarse(ActionEvent event) {
         try {
-            // Cargamos el FXML del registro
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLRegister.fxml"));
             Parent root = loader.load();
 
-            // Creamos una nueva ventana (Stage)
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Registro de Usuario - Running la Safor");
 
-            // Hacerla modal para que no se pueda interactuar con la principal hasta cerrar esta
             stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
 
             stage.showAndWait();
             
             if (SportActivityApp.getInstance().getCurrentUser() != null) {
                 ((javafx.scene.Node)(event.getSource())).getScene().getWindow().hide();
-                // Cargamos el FXML del registro
                 FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
                 Parent mainRoot = mainLoader.load();
 
-                // Creamos una nueva ventana (Stage)
                 Stage mainStage = new Stage();
                 mainStage.setScene(new Scene(mainRoot));
                 mainStage.setTitle("Aplicación principal - Running la Safor");
@@ -64,29 +61,26 @@ public class FXMLInicioController implements Initializable {
         }
     }
     
+    // Al darle al botón de iniciar sesión te abre la ventana y se mantiene en espera
+    // Al terminar la acción de iniciar sesión, cierra las ventanas y abre la principal
     @FXML
     private void onIniSesion(ActionEvent event) {
         try {
-            // Cargamos el FXML del registro
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLIniSesion.fxml"));
             Parent root = loader.load();
 
-            // Creamos una nueva ventana (Stage)
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Inicio de seión - Running la Safor");
 
-            // Hacerla modal para que no se pueda interactuar con la principal hasta cerrar esta
             stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
 
             stage.showAndWait();
             if (SportActivityApp.getInstance().getCurrentUser() != null) {
                 ((javafx.scene.Node)(event.getSource())).getScene().getWindow().hide();
-                // Cargamos el FXML del registro
                 FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
                 Parent mainRoot = mainLoader.load();
 
-                // Creamos una nueva ventana (Stage)
                 Stage mainStage = new Stage();
                 mainStage.setScene(new Scene(mainRoot));
                 mainStage.setTitle("Aplicación principal - Running la Safor");
