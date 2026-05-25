@@ -145,7 +145,7 @@ public class FXMLDocumentController implements Initializable {
 
     /** Lista lateral que muestra todos los POIs añadidos al mapa. */
     @FXML
-    private ListView<Poi> map_listview;
+    private ListView<Annotation> map_listview;
 
     /** ScrollPane que envuelve el mapa y permite desplazarlo. */
     @FXML
@@ -303,48 +303,7 @@ public class FXMLDocumentController implements Initializable {
      *
      * @param event evento de ratón sobre el ListView
      */
-    void listClicked(MouseEvent event) {
-        // Obtenemos el POI seleccionado; si no hay ninguno, salimos
-        Poi itemSelected = map_listview.getSelectionModel().getSelectedItem();
-        if (itemSelected == null) return;
-
-        // ── Dimensiones del mapa con el zoom actual aplicado ──────────
-        double mapWidth  = mapPane.getWidth()  * zoomGroup.getScaleX();
-        double mapHeight = mapPane.getHeight() * zoomGroup.getScaleY();
-
-        // ── Posición del POI escalada ──────────────────────────────────
-        // getPosition() devuelve las coordenadas en el sistema local del
-        // mapPane (sin zoom). Las multiplicamos por el factor de escala
-        // para obtener la posición real en pantalla.
-        double poiX = itemSelected.getPosition().getX() * zoomGroup.getScaleX();
-        double poiY = itemSelected.getPosition().getY() * zoomGroup.getScaleY();
-
-        // ── Tamaño visible del ScrollPane (viewport) ───────────────────
-        double viewW = map_scrollpane.getViewportBounds().getWidth();
-        double viewH = map_scrollpane.getViewportBounds().getHeight();
-
-        // ── Cálculo del scroll normalizado [0, 1] ─────────────────────
-        // Restamos la mitad del viewport para que el POI quede centrado
-        // y no en la esquina superior-izquierda del área visible.
-        double scrollH = (poiX - viewW / 2) / (mapWidth  - viewW);
-        double scrollV = (poiY - viewH / 2) / (mapHeight - viewH);
-
-        // Garantizamos que el valor esté dentro del rango válido [0, 1]
-        scrollH = Math.max(0, Math.min(1, scrollH));
-        scrollV = Math.max(0, Math.min(1, scrollV));
-
-        // ── Animación suave con Timeline ──────────────────────────────
-        // Timeline interpola los valores de las propiedades a lo largo
-        // del tiempo. KeyValue define qué propiedad animar y hasta qué
-        // valor; KeyFrame define en qué instante se alcanza ese valor.
-        final Timeline timeline = new Timeline();
-        final KeyValue kv1 = new KeyValue(map_scrollpane.hvalueProperty(), scrollH);
-        final KeyValue kv2 = new KeyValue(map_scrollpane.vvalueProperty(), scrollV);
-        final KeyFrame kf  = new KeyFrame(Duration.millis(500), kv1, kv2);
-        timeline.getKeyFrames().add(kf);
-        timeline.play(); // Inicia la animación (no bloquea el hilo de la UI)
-
-    }
+        
 
     // =========================================================
     //  CONSTRUCCIÓN DEL MAPA
@@ -497,23 +456,25 @@ public class FXMLDocumentController implements Initializable {
                //  setCellFactory() define cómo se renderiza cada celda
         //  de forma independiente al modelo Poi.
         //  Aquí mostramos "CÓDIGO – Nombre" en cada fila.
-        map_listview.setCellFactory(listView -> new ListCell<Poi>() {
+        map_listview.setCellFactory(listView -> new ListCell<Annotation>() {
             @Override
-            protected void updateItem(Poi poi, boolean empty) {
-                // Siempre llamar a super primero (requerido por JavaFX)
-                super.updateItem(poi, empty);
-
-                if (empty || poi == null) {
-                    // Celda vacía: limpiamos texto y gráfico
+            protected void updateItem(Annotation ann, boolean empty) {
+                super.updateItem(ann, empty);
+                if (empty || ann == null) {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    // Mostramos código y nombre separados por un guión largo
-                    setText(poi.getCode() + " – " + poi.getPosition());
+                    String icono = switch (ann.getType()) {
+                        case POINT  -> "📍";
+                        case TEXT   -> "📝";
+                        case LINE   -> "📏";
+                        case CIRCLE -> "⭕";
+                    };
+                    String texto = ann.getText().isEmpty() ? "(sin texto)" : ann.getText();
+                    setText(icono + " " + ann.getType().name() + " – " + texto);
                 }
             }
         });
-
         // ── Carga del mapa inicial ─────────────────────────────────────
         // El fichero se busca relativo al directorio de trabajo del proyecto.
         buildMap(new File("maps/upv.jpg"));
@@ -635,60 +596,8 @@ public class FXMLDocumentController implements Initializable {
      * @param y coordenada Y del clic en el sistema local del mapPane
      */
     private void addPoi(double x, double y) {
-
-        // ── Construcción del diálogo personalizado ────────────────────
-        Dialog<Poi> poiDialog = new Dialog<>();
-        poiDialog.setTitle("Nuevo POI");
-        poiDialog.setHeaderText("Introduce un nuevo POI");
-
-        // Personalizamos el icono de la ventana del diálogo
-        Stage dialogStage = (Stage) poiDialog.getDialogPane().getScene().getWindow();
-        dialogStage.getIcons().add(
-            new Image(getClass().getResourceAsStream("/resources/logo.png"))
-        );
-
-        // Botones del diálogo: Aceptar y Cancelar
-        ButtonType okButton = new ButtonType("Aceptar", ButtonBar.ButtonData.OK_DONE);
-        poiDialog.getDialogPane().getButtonTypes().addAll(okButton, ButtonType.CANCEL);
-
-        // Campo de texto para el nombre del POI
-        TextField nameField = new TextField();
-        nameField.setPromptText("Nombre del POI");
-
-        // Layout del contenido del diálogo (VBox con espaciado de 10 px)
-        VBox vbox = new VBox(10, new Label("Nombre:"), nameField);
-        poiDialog.getDialogPane().setContent(vbox);
-
-        // ResultConverter: transforma la selección del botón en un objeto Poi.
-        // FIX 1: ya no usamos coordenadas provisionales (0,0); pasamos (x,y)
-        // directamente al constructor para que el modelo sea coherente desde el inicio.
-        poiDialog.setResultConverter(dialogButton -> {
-            if (dialogButton == okButton) {
-                return new Poi(nameField.getText().trim(), x, y);
-            }
-            return null;
-        });
-
-        // Mostramos el diálogo y esperamos la respuesta del usuario
-        Optional<Poi> result = poiDialog.showAndWait();
-
-        if (result.isPresent()) {
-            Poi poi = result.get();
-
-            // FIX 1: confirmamos la posición como Point2D para compatibilidad
-            // con getPosition(), usando las mismas coordenadas (x, y).
-            poi.setPosition(new Point2D(x, y));
-
-            // Añadimos el POI al ListView (la CellFactory mostrará nombre y código)
-            map_listview.getItems().add(poi);
-
-            // FIX 1: usamos (x, y) tanto para el modelo como para el Text,
-            // garantizando que la etiqueta aparezca exactamente donde se hizo clic.
-            Text text = new Text(poi.getCode());
-            text.setX(x);
-            text.setY(y);
-            mapPane.getChildren().add(text);
-        }
+        // Método del demo original — en desuso.
+        // Las anotaciones se gestionan desde abrirDialogoAnotacion().
     }
 
     // =========================================================
@@ -1184,6 +1093,11 @@ public class FXMLDocumentController implements Initializable {
     private void registrarNodoAnotacion(javafx.scene.Node nodo, Annotation ann) {
         nodosAnotacion.put(nodo, ann);
 
+        boolean yaEnLista = map_listview.getItems().stream().anyMatch(a -> a.getId() == ann.getId());
+        if (!yaEnLista) {
+            map_listview.getItems().add(ann);
+        }
+
         MenuItem miEliminar = new MenuItem("🗑 Eliminar anotación");
         ContextMenu menuBorrar = new ContextMenu(miEliminar);
 
@@ -1194,19 +1108,20 @@ public class FXMLDocumentController implements Initializable {
                 .filter(entry -> entry.getValue().getId() == ann.getId())
                 .map(Map.Entry::getKey)
                 .toList();
-
             mapPane.getChildren().removeAll(aEliminar);
             aEliminar.forEach(nodosAnotacion::remove);
+
+            map_listview.getItems().removeIf(a -> a.getId() == ann.getId());
         });
 
         nodo.setOnMouseClicked(ev -> {
             if (ev.getButton() == MouseButton.SECONDARY) {
-                mapContextMenu.hide(); // evita que se abra el menú general del mapa
+                mapContextMenu.hide();
                 menuBorrar.show(nodo, ev.getScreenX(), ev.getScreenY());
-                ev.consume();          // para la propagación al mapPane
+                ev.consume();
             }
         });
-    }
+}
 
     // 3. Persistir en la BDD
     //app.addAnnotation(actividad, ann); // 
