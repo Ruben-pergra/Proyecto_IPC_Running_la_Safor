@@ -465,6 +465,7 @@ public class FXMLDocumentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        hijosDefaultVistas = new java.util.ArrayList<>(boxVistas.getChildren());
 
         // ── Configuración del slider de zoom ──────────────────────────
         zoom_slider.setMin(0.5);   // zoom mínimo: 50 %
@@ -502,14 +503,8 @@ public class FXMLDocumentController implements Initializable {
                 }
             }
         });
-
-        // ── Carga del mapa inicial ─────────────────────────────────────
-        // El fichero se busca relativo al directorio de trabajo del proyecto.
-        buildMap(new File("maps/upv.jpg"));
         
         //Codigo de los alumnos//
-        cargarListaMapas();
-        hijosDefaultVistas = new java.util.ArrayList<>(boxVistas.getChildren());
         
         mapa_listview.getSelectionModel().selectedItemProperty().addListener((observable, oldMap, newMap) -> {
             if (newMap != null) {
@@ -528,7 +523,6 @@ public class FXMLDocumentController implements Initializable {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    // Muestra algo como "Actividad (5.20 km)" en la lista
                     setText("Actividad (" + String.format("%.2f km", item.getTotalDistance() / 1000.0) + ")");
                 }
             }
@@ -536,15 +530,17 @@ public class FXMLDocumentController implements Initializable {
         
         actividades_listview.getSelectionModel().selectedItemProperty().addListener((obs, oldAct, newAct) -> {
             if (newAct != null && mapa_listview.getSelectionModel().getSelectedItem() != null) {
-                // Limpiamos el mapa de rutas o círculos anteriores
+                // Borramos rutas anteriores para que no se superpongan
                 mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle);
                 
-                // Cargamos estadísticas y dibujamos
                 cargarEstadisticas(newAct);
                 MapProjection mapaProj = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), mapPane.getWidth(), mapPane.getHeight());
                 dibujarRuta(newAct, mapaProj);
             }
         });
+        
+        buildMap(new File("maps/upv.jpg"));
+        cargarListaMapas();
         
         mapa_listview.getSelectionModel().selectedItemProperty().addListener((observable, oldMap, newMap) -> {
             if (newMap != null) {
@@ -867,7 +863,6 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void onImportarGpx(ActionEvent event) {
-
         mostrarHome();
 
         FileChooser fc = new FileChooser();
@@ -878,17 +873,22 @@ public class FXMLDocumentController implements Initializable {
         File gpxFile = fc.showOpenDialog(bImportarGpx.getScene().getWindow());
 
         if (gpxFile != null) {
+            // Esto lo guarda automáticamente en la base de datos
             Activity activity = app.importActivity(gpxFile);
+            
             if (activity != null) {
-                MapRegion region = activity.getSuggestedMap();
-                buildMap(new File(region.getImagePath()));
-                cargarEstadisticas(activity);
-
-                Platform.runLater(() -> {
-                    MapProjection mapa = new MapProjection(
-                            region, mapPane.getWidth(), mapPane.getHeight());
-                    dibujarRuta(activity, mapa);
-                });
+                // Seleccionamos el mapa al que pertenece esta nueva actividad
+                MapRegion regionSugerida = activity.getSuggestedMap();
+                mapa_listview.getSelectionModel().select(regionSugerida);
+                
+                // Refrescamos la lista de actividades para que aparezca
+                cargarActividadesDelMapa(regionSugerida);
+                
+                // Seleccionamos la actividad automáticamente para que se dibuje
+                actividades_listview.getSelectionModel().select(activity);
+                
+                Alert a = new Alert(Alert.AlertType.INFORMATION, "¡Actividad importada y guardada con éxito!");
+                a.showAndWait();
             }
         }
     }
@@ -903,6 +903,52 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void onBorrarGpx(ActionEvent event) {
+        // 1. Obtenemos la actividad que el usuario ha seleccionado en la lista
+        Activity actividadSeleccionada = actividades_listview.getSelectionModel().getSelectedItem();
+        
+        // Si no ha seleccionado ninguna, le avisamos y no hacemos nada
+        if (actividadSeleccionada == null) {
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
+            alerta.setTitle("Atención");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Por favor, selecciona una actividad de la lista para borrarla.");
+            alerta.showAndWait();
+            return;
+        }
+
+        // 2. Pedimos confirmación al usuario (buena práctica de UX)
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Confirmar borrado");
+        confirmacion.setHeaderText("¿Estás seguro de que deseas borrar esta actividad?");
+        confirmacion.setContentText("Esta acción eliminará la actividad de tu base de datos y no se puede deshacer.");
+
+        Optional<ButtonType> resultado = confirmacion.showAndWait();
+        
+        // 3. Si el usuario pulsa "Aceptar"
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            
+            // Borramos la actividad de la base de datos
+            app.removeActivity(actividadSeleccionada);
+            
+            // Refrescamos la lista de actividades del mapa actual para que desaparezca
+            MapRegion mapaActual = mapa_listview.getSelectionModel().getSelectedItem();
+            if (mapaActual != null) {
+                cargarActividadesDelMapa(mapaActual);
+            }
+            
+            // Limpiamos el mapa (borramos la línea de la ruta y los círculos verdes/rojos)
+            mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle);
+            
+            // Reseteamos las estadísticas para que queden a cero
+            limpiarEstadisticas();
+            
+            // Mostramos mensaje de éxito
+            Alert exito = new Alert(Alert.AlertType.INFORMATION);
+            exito.setTitle("Éxito");
+            exito.setHeaderText(null);
+            exito.setContentText("La actividad se ha borrado correctamente.");
+            exito.showAndWait();
+        }
     }
     
     private void dibujarRuta(Activity activity, MapProjection mapa) {
