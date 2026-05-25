@@ -95,7 +95,7 @@
                         <Insets right="300.0" />
                      </VBox.margin>
                   </PasswordField>
-                  <Label fx:id="passwordError" text="Entre 8 y 20 caracteres, minimo una mayuscula, minuscula y simbolo" textFill="#f20c0c" />
+                  <Label fx:id="passwordError" text="Entre 8 y 20 caracteres, mayuscula, minuscula, simbolo y digito" textFill="#f20c0c" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">

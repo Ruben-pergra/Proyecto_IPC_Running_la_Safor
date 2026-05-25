@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -19,12 +18,11 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLDocumentController">
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLDocumentController">
    <center>
       <VBox prefHeight="556.0" prefWidth="853.0" stylesheets="@../resources/estilos.css">
          <children>
@@ -160,12 +158,12 @@
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <LineChart fx:id="elevationChart" animated="false" prefHeight="212.0" prefWidth="476.0">
-                                <xAxis>
-                                  <NumberAxis label="Distancia(km)" side="BOTTOM" fx:id="xAxis" />
-                                </xAxis>
-                                <yAxis>
-                                  <NumberAxis label="Altitud(m)" side="LEFT" fx:id="yAxis" />
-                                </yAxis>
+                                 <xAxis>
+                                    <NumberAxis label="Distancia(km)" side="BOTTOM" fx:id="xAxis" />
+                                 </xAxis>
+                                 <yAxis>
+                                    <NumberAxis fx:id="yAxis" label="Altitud(m)" side="LEFT" />
+                                 </yAxis>
                               </LineChart>
                               <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
                                  <children>
@@ -188,11 +186,15 @@
             <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
          </BorderPane.margin>
          <children>
+            <ImageView fx:id="homeButton" fitHeight="31.0" fitWidth="37.0" onMouseClicked="#onHome" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/home.jpg" />
+               </image>
+            </ImageView>
             <Button contentDisplay="RIGHT" layoutX="721.0" layoutY="10.0" mnemonicParsing="false" onAction="#onClickSesiones" prefWidth="80.0" text="Sesiones">
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin></Button>
-            <Region prefHeight="0.0" prefWidth="225.0" />
             <Button contentDisplay="RIGHT" layoutX="169.0" layoutY="10.0" mnemonicParsing="false" onAction="#onMapsButton" prefHeight="26.0" prefWidth="80.0" text="Mapas">
                <HBox.margin>
                   <Insets left="250.0" />

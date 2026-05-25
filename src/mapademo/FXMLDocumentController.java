@@ -31,12 +31,11 @@ import java.io.File;
 import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -69,22 +68,19 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import upv.ipc.sportlib.Activity;
+import upv.ipc.sportlib.Annotation;
+import upv.ipc.sportlib.AnnotationType;
+import upv.ipc.sportlib.GeoPoint;
 import upv.ipc.sportlib.MapProjection;
 import upv.ipc.sportlib.MapRegion;
 import upv.ipc.sportlib.SportActivityApp;
 import upv.ipc.sportlib.TrackPoint;
-import upv.ipc.sportlib.Annotation;
-import upv.ipc.sportlib.AnnotationType;
-import upv.ipc.sportlib.GeoPoint;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Controlador principal de la aplicación de mapa con POIs.
@@ -192,6 +188,10 @@ public class FXMLDocumentController implements Initializable {
     private Button bBorrarGpx;
     
     @FXML
+    private VBox boxAct;
+    @FXML
+    private ImageView homeButton;
+    @FXML
     private Text lblDistanciaTotal;
     @FXML
     private Text lblDuracion;
@@ -207,6 +207,8 @@ public class FXMLDocumentController implements Initializable {
     private Text lblAltitudMax;
     @FXML
     private Text lblAltitudMin;
+    @FXML
+    private LineChart<Double, Double> perfilDesnivel;
     @FXML
     private ListView<Activity> actividades_listview;
     
@@ -224,7 +226,7 @@ public class FXMLDocumentController implements Initializable {
     
     private Activity actividadActual;
     private final Map<javafx.scene.Node, Annotation> nodosAnotacion = new HashMap<>();
-
+    
     // =========================================================
     //  MANEJADORES DE ZOOM
     // =========================================================
@@ -303,7 +305,6 @@ public class FXMLDocumentController implements Initializable {
      *
      * @param event evento de ratón sobre el ListView
      */
-        
 
     // =========================================================
     //  CONSTRUCCIÓN DEL MAPA
@@ -356,7 +357,6 @@ public class FXMLDocumentController implements Initializable {
                 // FIX 2: clic izquierdo en modo inserción → añadir POI y desactivar modo
                 insertionMode = false;
                 mapPane.setStyle(""); // Restauramos el cursor normal
-                addPoi(e.getX(), e.getY());
             }
         });
 
@@ -376,7 +376,6 @@ public class FXMLDocumentController implements Initializable {
 
         // Asignamos el contentGroup como contenido del ScrollPane
         map_scrollpane.setContent(contentGroup);
-
     }
 
     // =========================================================
@@ -433,6 +432,8 @@ public class FXMLDocumentController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        hijosDefaultVistas = new java.util.ArrayList<>(boxVistas.getChildren());
+        
 
         // ── Configuración del slider de zoom ──────────────────────────
         zoom_slider.setMin(0.5);   // zoom mínimo: 50 %
@@ -475,13 +476,11 @@ public class FXMLDocumentController implements Initializable {
                 }
             }
         });
-        // ── Carga del mapa inicial ─────────────────────────────────────
-        // El fichero se busca relativo al directorio de trabajo del proyecto.
-        buildMap(new File("maps/upv.jpg"));
         
         //Codigo de los alumnos//
+        buildMap(new File("maps/upv.jpg"));
         cargarListaMapas();
-        hijosDefaultVistas = new java.util.ArrayList<>(boxVistas.getChildren());
+        setupHoverMarker();
         
         mapa_listview.getSelectionModel().selectedItemProperty().addListener((observable, oldMap, newMap) -> {
             if (newMap != null) {
@@ -500,7 +499,6 @@ public class FXMLDocumentController implements Initializable {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    // Muestra algo como "Actividad (5.20 km)" en la lista
                     setText("Actividad (" + String.format("%.2f km", item.getTotalDistance() / 1000.0) + ")");
                 }
             }
@@ -508,14 +506,17 @@ public class FXMLDocumentController implements Initializable {
         
         actividades_listview.getSelectionModel().selectedItemProperty().addListener((obs, oldAct, newAct) -> {
             if (newAct != null && mapa_listview.getSelectionModel().getSelectedItem() != null) {
-                // Limpiamos el mapa de rutas o círculos anteriores
-                actividadActual = newAct;
-                mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle);
                 
-                // Cargamos estadísticas y dibujamos
+                this.actividadActual = newAct;
+                // Borramos rutas anteriores para que no se superpongan
+                mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle && n != hoverMarker);
+                
                 cargarEstadisticas(newAct);
-                MapProjection mapaProj = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), mapPane.getWidth(), mapPane.getHeight());
-                dibujarRuta(newAct, mapaProj);
+                
+                this.currentProjection = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), mapPane.getWidth(), mapPane.getHeight());
+                setupHoverMarker();
+                loadElevationChart(newAct);
+                dibujarRuta(newAct, currentProjection);
             }
         });
         
@@ -525,6 +526,7 @@ public class FXMLDocumentController implements Initializable {
                 File archivoImagen = new File(newMap.getImagePath());
                 buildMap(archivoImagen);
                 
+                this.actividadActual = null;
                 // Limpiamos rutas y estadísticas viejas
                 limpiarEstadisticas();
                 
@@ -570,6 +572,7 @@ public class FXMLDocumentController implements Initializable {
      *
      * @param event evento de acción del menú
      */
+    @FXML
     private void about(ActionEvent event) {
         Alert mensaje = new Alert(Alert.AlertType.INFORMATION);
 
@@ -595,10 +598,6 @@ public class FXMLDocumentController implements Initializable {
      * @param x coordenada X del clic en el sistema local del mapPane
      * @param y coordenada Y del clic en el sistema local del mapPane
      */
-    private void addPoi(double x, double y) {
-        // Método del demo original — en desuso.
-        // Las anotaciones se gestionan desde abrirDialogoAnotacion().
-    }
 
     // =========================================================
     //  CAMBIAR EL MAPA (selector de fichero)
@@ -615,6 +614,7 @@ public class FXMLDocumentController implements Initializable {
      * @param event evento de acción del menú
      * @throws IOException si hay un problema al obtener la ruta canónica
      */
+    @FXML
     private void cambiarMapa(ActionEvent event) throws IOException {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(".")); // Empezamos en el directorio del proyecto
@@ -685,10 +685,13 @@ public class FXMLDocumentController implements Initializable {
         alerta.setTitle("Ayuda general");
         alerta.setHeaderText("Funciones de la aplicacion"); 
         
-        alerta.setContentText("• Boton sesiones te lleva a las hechas por el usuario \n"
-                            + "• Para importar actividades ha de ser formato .gpx \n"
-                            + "• La pestaña mapas te permite crear nuevos propios tuyos");
-        
+        alerta.setContentText("• Puedes elegir entre los diferentes mapas y se mostrarán tus actividades \n"
+                            + "• En la pestaña mapas puedes añadir más o borrarlos \n"
+                            + "• Con click derecho sobre el mapa puedes hacer anotaciones \n"
+                            + "• En el apartado de usuario puedes cerrar sesion o modificar perfil \n"
+                            + "• Moviendo el ratón por la línea de desnivel (abajo de la imagen del mapa) puedes ver el trazado de la actividad \n"
+                            + "• El botón home (el icono de la casa), te sirve para retornar del apartado de sesiones al menú principal \n");
+
         alerta.showAndWait();
     }
     
@@ -696,6 +699,7 @@ public class FXMLDocumentController implements Initializable {
     private void OnCerrarSesion(ActionEvent event) {
         try {
             mousePosition.getScene().getWindow().hide();
+            app.logout();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLInicio.fxml"));
             javafx.scene.Parent root = loader.load();
@@ -786,7 +790,6 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void onImportarGpx(ActionEvent event) {
-
         mostrarHome();
 
         FileChooser fc = new FileChooser();
@@ -797,20 +800,24 @@ public class FXMLDocumentController implements Initializable {
         File gpxFile = fc.showOpenDialog(bImportarGpx.getScene().getWindow());
 
         if (gpxFile != null) {
+            // Esto lo guarda automáticamente en la base de datos
             Activity activity = app.importActivity(gpxFile);
+            
             if (activity != null) {
-                actividadActual = activity;
-                MapRegion region = activity.getSuggestedMap();
-                buildMap(new File(region.getImagePath()));
-                cargarEstadisticas(activity);
-
-                Platform.runLater(() -> {
-                    MapProjection mapa = new MapProjection(region, mapPane.getWidth(), mapPane.getHeight());
-                    currentProjection = mapa;       
-                    dibujarRuta(activity, mapa);
-                    setupHoverMarker();             
-                    loadElevationChart(activity);   
-                });
+                // Seleccionamos el mapa al que pertenece esta nueva actividad
+                MapRegion regionSugerida = activity.getSuggestedMap();
+                mapa_listview.getSelectionModel().select(regionSugerida);
+                
+                // Refrescamos la lista de actividades para que aparezca
+                cargarActividadesDelMapa(regionSugerida);
+                
+                // Seleccionamos la actividad automáticamente para que se dibuje
+                actividades_listview.getSelectionModel().select(activity);
+                
+                Alert a = new Alert(Alert.AlertType.INFORMATION, "¡Actividad importada y guardada con éxito!");
+                a.showAndWait();
+                setupHoverMarker();             
+                loadElevationChart(activity); 
             }
         }
     }
@@ -825,6 +832,52 @@ public class FXMLDocumentController implements Initializable {
     
     @FXML
     private void onBorrarGpx(ActionEvent event) {
+        // 1. Obtenemos la actividad que el usuario ha seleccionado en la lista
+        Activity actividadSeleccionada = actividades_listview.getSelectionModel().getSelectedItem();
+        
+        // Si no ha seleccionado ninguna, le avisamos y no hacemos nada
+        if (actividadSeleccionada == null) {
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
+            alerta.setTitle("Atención");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Por favor, selecciona una actividad de la lista para borrarla.");
+            alerta.showAndWait();
+            return;
+        }
+
+        // 2. Pedimos confirmación al usuario (buena práctica de UX)
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Confirmar borrado");
+        confirmacion.setHeaderText("¿Estás seguro de que deseas borrar esta actividad?");
+        confirmacion.setContentText("Esta acción eliminará la actividad de tu base de datos y no se puede deshacer.");
+
+        Optional<ButtonType> resultado = confirmacion.showAndWait();
+        
+        // 3. Si el usuario pulsa "Aceptar"
+        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+            
+            // Borramos la actividad de la base de datos
+            app.removeActivity(actividadSeleccionada);
+            
+            // Refrescamos la lista de actividades del mapa actual para que desaparezca
+            MapRegion mapaActual = mapa_listview.getSelectionModel().getSelectedItem();
+            if (mapaActual != null) {
+                cargarActividadesDelMapa(mapaActual);
+            }
+            
+            // Limpiamos el mapa (borramos la línea de la ruta y los círculos verdes/rojos)
+            mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle);
+            
+            // Reseteamos las estadísticas para que queden a cero
+            limpiarEstadisticas();
+            
+            // Mostramos mensaje de éxito
+            Alert exito = new Alert(Alert.AlertType.INFORMATION);
+            exito.setTitle("Éxito");
+            exito.setHeaderText(null);
+            exito.setContentText("La actividad se ha borrado correctamente.");
+            exito.showAndWait();
+        }
     }
     
     private void dibujarRuta(Activity activity, MapProjection mapa) {
@@ -873,6 +926,7 @@ public class FXMLDocumentController implements Initializable {
         });
     }
     
+    @FXML
     private void onHome(MouseEvent event) {
 
         mostrarHome();
@@ -897,6 +951,9 @@ public class FXMLDocumentController implements Initializable {
     }
     
     private void setupHoverMarker() {
+        if (hoverMarker != null) {
+            mapPane.getChildren().remove(hoverMarker);
+        }
         hoverMarker = new Circle(7);
         hoverMarker.setFill(Color.DODGERBLUE);
         hoverMarker.setStroke(Color.WHITE);
@@ -946,19 +1003,8 @@ public class FXMLDocumentController implements Initializable {
         });
     }
     
-    //Arreglar cuando esté actividades
-    /*
-    private void guardarAnotacion(Activity actividad, AnnotationType tipo, String texto, double x, double y) {
-    // 1. Obtener la proyección del mapa actual para convertir píxeles a GPS
-    MapProjection proj = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), 
-                                           mapPane.getWidth(), mapPane.getHeight());
-    GeoPoint geoP = proj.unproject(x, y);
-*/
-    //2. Crear la anotación
-    //Annotation ann = new Annotation(tipo, texto, "#FF0000", 2.0, List.of(geoP));
-    
     private void abrirDialogoAnotacion(AnnotationType tipo, double x, double y) {
-        if (actividadActual == null || currentProjection == null) {
+        if (this.actividadActual == null || currentProjection == null) {
             Alert aviso = new Alert(Alert.AlertType.WARNING);
             aviso.setTitle("Sin actividad");
             aviso.setHeaderText(null);
@@ -1015,13 +1061,13 @@ public class FXMLDocumentController implements Initializable {
 
         //── Crear y persistir la anotación ───────────────────────
         Annotation ann = new Annotation(tipo, texto, color, 2.0, puntos);
-        Annotation guardada = app.addAnnotation(actividadActual, ann);
+        Annotation guardada = app.addAnnotation(this.actividadActual, ann);
 
         if (guardada != null) {
             dibujarAnotacion(guardada, x, y, color);
         }
     }
-
+    
     private void dibujarAnotacion(Annotation ann, double x, double y, String colorHex) {
         Color color = Color.web(colorHex);
 
@@ -1090,7 +1136,7 @@ public class FXMLDocumentController implements Initializable {
         }
     }
     
-    private void registrarNodoAnotacion(javafx.scene.Node nodo, Annotation ann) {
+     private void registrarNodoAnotacion(javafx.scene.Node nodo, Annotation ann) {
         nodosAnotacion.put(nodo, ann);
 
         boolean yaEnLista = map_listview.getItems().stream().anyMatch(a -> a.getId() == ann.getId());
@@ -1121,9 +1167,7 @@ public class FXMLDocumentController implements Initializable {
                 ev.consume();
             }
         });
-}
-
-    // 3. Persistir en la BDD
-    //app.addAnnotation(actividad, ann); // 
-    //}
+    }
+     
+     
 }
