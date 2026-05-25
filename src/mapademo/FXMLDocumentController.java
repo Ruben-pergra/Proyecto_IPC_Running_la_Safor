@@ -73,6 +73,7 @@ import javafx.util.Duration;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import upv.ipc.sportlib.Activity;
 import upv.ipc.sportlib.MapProjection;
@@ -212,6 +213,15 @@ public class FXMLDocumentController implements Initializable {
     
     private java.util.List<javafx.scene.Node> hijosDefaultVistas;
     private SportActivityApp app = SportActivityApp.getInstance();
+    
+    @FXML
+    private LineChart<Number, Number> elevationChart;
+    @FXML 
+    private NumberAxis xAxis;
+    @FXML 
+    private NumberAxis yAxis;
+    private MapProjection currentProjection;
+    private Circle hoverMarker;
     
     // =========================================================
     //  MANEJADORES DE ZOOM
@@ -534,6 +544,8 @@ public class FXMLDocumentController implements Initializable {
                 mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle);
                 
                 cargarEstadisticas(newAct);
+                setupHoverMarker();             
+                loadElevationChart(newAct); 
                 MapProjection mapaProj = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), mapPane.getWidth(), mapPane.getHeight());
                 dibujarRuta(newAct, mapaProj);
             }
@@ -889,6 +901,8 @@ public class FXMLDocumentController implements Initializable {
                 
                 Alert a = new Alert(Alert.AlertType.INFORMATION, "¡Actividad importada y guardada con éxito!");
                 a.showAndWait();
+                setupHoverMarker();             
+                loadElevationChart(activity); 
             }
         }
     }
@@ -1020,19 +1034,53 @@ public class FXMLDocumentController implements Initializable {
             }
         }
     }
-    
-    //Arreglar cuando esté actividades
-    /*
-    private void guardarAnotacion(Activity actividad, AnnotationType tipo, String texto, double x, double y) {
-    // 1. Obtener la proyección del mapa actual para convertir píxeles a GPS
-    MapProjection proj = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), 
-                                           mapPane.getWidth(), mapPane.getHeight());
-    GeoPoint geoP = proj.unproject(x, y);
+private void setupHoverMarker() {
+        hoverMarker = new Circle(7);
+        hoverMarker.setFill(Color.DODGERBLUE);
+        hoverMarker.setStroke(Color.WHITE);
+        hoverMarker.setStrokeWidth(2);
+        hoverMarker.setVisible(false);
+        hoverMarker.setMouseTransparent(true); // no interfiere con clics del mapa
+        mapPane.getChildren().add(hoverMarker);
+    }
 
-    // 2. Crear la anotación
-    Annotation ann = new Annotation(tipo, texto, "#FF0000", 2.0, List.of(geoP));
+    private void loadElevationChart(Activity activity) {
+        elevationChart.getData().clear();
 
-    // 3. Persistir en la BDD
-    app.addAnnotation(actividad, ann); // 
-    }*/
+        javafx.scene.chart.XYChart.Series<Number, Number> series = new javafx.scene.chart.XYChart.Series<>();
+        series.setName("Altitud");
+
+        List<TrackPoint> points = activity.getTrackPoints();
+        double distAcum = 0.0;
+
+        for (int i = 0; i < points.size(); i++) {
+            if (i > 0) {
+                distAcum += points.get(i).distanceTo(points.get(i - 1)) / 1000.0;
+            }
+
+            javafx.scene.chart.XYChart.Data<Number, Number> dato = new javafx.scene.chart.XYChart.Data<>(distAcum, points.get(i).getElevation());
+
+            final int idx = i;
+            dato.nodeProperty().addListener((obs, oldNode, newNode) -> {
+                if (newNode != null) {
+                    newNode.setOnMouseEntered(e -> {
+                        if (currentProjection == null || hoverMarker == null) return;
+                        Point2D pixel = currentProjection.project(points.get(idx));
+                        hoverMarker.setCenterX(pixel.getX());
+                        hoverMarker.setCenterY(pixel.getY());
+                        hoverMarker.setVisible(true);
+                        hoverMarker.toFront();
+                    });
+                }
+            });
+
+            series.getData().add(dato);
+        }
+
+        elevationChart.getData().add(series);
+
+        elevationChart.setOnMouseExited(e -> {
+            if (hoverMarker != null) hoverMarker.setVisible(false);
+        });
+    }
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -158,13 +157,13 @@
                         </ScrollPane>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <LineChart prefHeight="212.0" prefWidth="476.0">
-                                <xAxis>
-                                  <CategoryAxis side="BOTTOM" />
-                                </xAxis>
-                                <yAxis>
-                                  <NumberAxis side="LEFT" />
-                                </yAxis>
+                              <LineChart fx:id="elevationChart" animated="false" prefHeight="212.0" prefWidth="476.0">
+                                 <xAxis>
+                                    <NumberAxis label="Distancia(km)" side="BOTTOM" fx:id="xAxis" />
+                                 </xAxis>
+                                 <yAxis>
+                                    <NumberAxis fx:id="yAxis" label="Altitud(m)" side="LEFT" />
+                                 </yAxis>
                               </LineChart>
                               <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
                                  <children>
@@ -187,6 +186,11 @@
             <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
          </BorderPane.margin>
          <children>
+            <ImageView fx:id="homeButton" fitHeight="31.0" fitWidth="37.0" onMouseClicked="#onHome" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../resources/home.jpg" />
+               </image>
+            </ImageView>
             <Button contentDisplay="RIGHT" layoutX="721.0" layoutY="10.0" mnemonicParsing="false" onAction="#onClickSesiones" prefWidth="80.0" text="Sesiones">
                <HBox.margin>
                   <Insets left="20.0" />
