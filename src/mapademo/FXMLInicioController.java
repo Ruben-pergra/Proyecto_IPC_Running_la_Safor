@@ -5,7 +5,6 @@
  */
 package mapademo;
 
-
 import java.net.URL;
 
 import java.util.ResourceBundle;
@@ -21,14 +20,14 @@ import javafx.stage.Stage;
 import upv.ipc.sportlib.SportActivityApp;
 
 public class FXMLInicioController implements Initializable {
-    
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
         
     }
-    
+
     @FXML
     private void OnRegistrarse(ActionEvent event) {
         try {
@@ -45,16 +44,21 @@ public class FXMLInicioController implements Initializable {
             stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
 
             stage.showAndWait();
-            
+
             if (SportActivityApp.getInstance().getCurrentUser() != null) {
-                ((javafx.scene.Node)(event.getSource())).getScene().getWindow().hide();
-                // Cargamos el FXML del registro
+                ((javafx.scene.Node) (event.getSource())).getScene().getWindow().hide();
+
                 FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
                 Parent mainRoot = mainLoader.load();
 
                 // Creamos una nueva ventana (Stage)
                 Stage mainStage = new Stage();
-                mainStage.setScene(new Scene(mainRoot));
+                Scene mainScene = new Scene(mainRoot);
+                mainScene.getStylesheets().add(
+                        getClass().getResource("/resources/estilos.css").toExternalForm()
+                );
+                mainStage.setScene(mainScene);
+                mainStage.setResizable(false);
                 mainStage.setTitle("Aplicación principal - Running la Safor");
 
                 mainStage.show();
@@ -63,7 +67,7 @@ public class FXMLInicioController implements Initializable {
             System.err.println("Error al cargar el formulario de registro: " + e.getMessage());
         }
     }
-    
+
     @FXML
     private void onIniSesion(ActionEvent event) {
         try {
@@ -81,14 +85,19 @@ public class FXMLInicioController implements Initializable {
 
             stage.showAndWait();
             if (SportActivityApp.getInstance().getCurrentUser() != null) {
-                ((javafx.scene.Node)(event.getSource())).getScene().getWindow().hide();
-                // Cargamos el FXML del registro
+                ((javafx.scene.Node) (event.getSource())).getScene().getWindow().hide();
+
                 FXMLLoader mainLoader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
                 Parent mainRoot = mainLoader.load();
 
                 // Creamos una nueva ventana (Stage)
                 Stage mainStage = new Stage();
-                mainStage.setScene(new Scene(mainRoot));
+                Scene mainScene = new Scene(mainRoot);
+                mainScene.getStylesheets().add(
+                        getClass().getResource("/resources/estilos.css").toExternalForm()
+                );
+                mainStage.setScene(mainScene);
+                mainStage.setResizable(false);
                 mainStage.setTitle("Aplicación principal - Running la Safor");
 
                 mainStage.show();
@@ -97,5 +106,5 @@ public class FXMLInicioController implements Initializable {
             System.err.println("Error al cargar el formulario de registro: " + e.getMessage());
         }
     }
-    
+
 }

@@ -17,12 +17,16 @@ import javafx.stage.Stage;
  * @author jose
  */
 public class MapaDemoApp extends Application {
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLInicio.fxml"));
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/logo.png")));
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(
+                getClass().getResource("/resources/estilos.css").toExternalForm()
+        );
+        stage.setResizable(false);
         stage.setTitle("Página de inicio - IPC");
         stage.setScene(scene);
         stage.show();
@@ -34,5 +38,5 @@ public class MapaDemoApp extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

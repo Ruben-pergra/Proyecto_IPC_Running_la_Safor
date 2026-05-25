@@ -1,22 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.layout.VBox?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLInicioController">
+
+<VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0" spacing="20.0" styleClass="pantalla-inicio" stylesheets="@../resources/estilos.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLInicioController">
    <children>
-      <HBox alignment="CENTER" layoutX="200.0" layoutY="50.0" prefHeight="100.0" prefWidth="200.0">
+      <Label styleClass="titulo-principal" stylesheets="@../resources/estilos.css" text="Running la Safor" />
+      <Label styleClass="subtitulo" stylesheets="@../resources/estilos.css" text="Interfaces Persona-Computador UPV" />
+      <HBox alignment="CENTER" spacing="20.0" styleClass="pantalla-inicio" stylesheets="@../resources/estilos.css">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="BIENVENIDO" />
-         </children>
-      </HBox>
-      <HBox alignment="CENTER" layoutX="168.0" layoutY="150.0" prefHeight="100.0" prefWidth="265.0" spacing="100.0">
-         <children>
-            <Button mnemonicParsing="false" onAction="#OnRegistrarse" text="Registrarse" />
-            <Button mnemonicParsing="false" onAction="#onIniSesion" text="Iniciar sesión" />
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0" spacing="12.0" styleClass="tarjeta" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <children>
+                  <ImageView fitHeight="39.0" fitWidth="43.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="NEVER">
+                     <image>
+                        <Image url="@../resources/user-_1_.png" />
+                     </image>
+                  </ImageView>
+                  <Label styleClass="titulo-tarjeta" text="¿Eres nuevo?" />
+                  <Label prefWidth="160.0" styleClass="desc-tarjeta" text="Crea tu cuenta para empezar a registrar tus actividades" textAlignment="CENTER" wrapText="true" />
+                  <Button mnemonicParsing="false" onAction="#OnRegistrarse" styleClass="boton-registro" text="Registrarse" />
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0" spacing="12.0" styleClass="tarjeta" stylesheets="@../resources/estilos.css" HBox.hgrow="ALWAYS">
+               <children>
+                  <ImageView fitHeight="39.0" fitWidth="43.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../resources/log-in-_1_.png" />
+                     </image>
+                  </ImageView>
+                  <Label styleClass="titulo-tarjeta" stylesheets="@../resources/estilos.css" text="¿Ya tienes cuenta?" />
+                  <Label styleClass="desc-tarjeta" text="Inicia sesión para acceder a tus rutas y estadísticas" wrapText="true" />
+                  <Button mnemonicParsing="false" onAction="#onIniSesion" styleClass="boton-login" text="Iniciar sesión" />
+               </children>
+            </VBox>
          </children>
       </HBox>
    </children>
-</Pane>
+   <padding>
+      <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+   </padding>
+</VBox>
