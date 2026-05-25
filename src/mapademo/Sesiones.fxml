@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="455.0" prefWidth="796.0" spacing="16.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.SesionesController">
+   <children>
+      <Label prefHeight="17.0" prefWidth="247.0" text="Historial de sesiones" />
+      <GridPane prefHeight="116.0" prefWidth="552.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label fx:id="lblTotalSesiones" prefHeight="5.0" prefWidth="3.0" text="8" />
+                  <Label prefHeight="18.0" prefWidth="107.0" text="Sesiones totales" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+               <children>
+                  <Label fx:id="lblTiempoTotal" text="Label" />
+                  <Label text="Tiempo total" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
+               <children>
+                  <Label fx:id="lblTotalImportadas" text="Label" />
+                  <Label text="Actividades Importadas" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3">
+               <children>
+                  <Label fx:id="lblAnotacionesCreadas" text="Label" />
+                  <Label text="Anotaciones creadas" />
+               </children>
+            </VBox>
+         </children>
+      </GridPane>
+      <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="colFecha" minWidth="75.0" prefWidth="158.0" text="Inicio de sesion" />
+            <TableColumn fx:id="colDuracion" minWidth="75.0" prefWidth="154.0" text="Duración" />
+            <TableColumn fx:id="colImportadas" minWidth="75.0" prefWidth="142.0" text="Importadas" />
+            <TableColumn fx:id="colVistas" minWidth="75.0" prefWidth="149.0" text="Vistas" />
+            <TableColumn fx:id="colAnotaciones" minWidth="75.0" prefWidth="152.0" text="Anotaciones" />
+         </columns>
+      </TableView>
+      <HBox maxWidth="1.7976931348623157E308" prefHeight="85.0" spacing="125.0" style="-fx-background-color: #f4f4f4;" VBox.vgrow="ALWAYS">
+         <children>
+            <Label fx:id="lblFooterTotal" text="Label" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></Label>
+            <Label fx:id="lblFooterDuracion" text="Label" HBox.hgrow="ALWAYS" />
+            <Label fx:id="lblFooterImportadas" text="Label" HBox.hgrow="ALWAYS" />
+            <Label fx:id="lblFooterVistas" text="Label" HBox.hgrow="ALWAYS" />
+            <Label fx:id="lblFooterAnotaciones" text="Label" HBox.hgrow="ALWAYS" />
+         </children>
+         <padding>
+            <Insets bottom="8.0" left="5.0" right="8.0" top="8.0" />
+         </padding>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>
