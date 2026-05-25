@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox alignment="CENTER" prefHeight="648.0" prefWidth="778.0" styleClass="root" stylesheets="@../resources/estiloMain.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLMapaController">
+   <children>
+      <HBox alignment="CENTER_RIGHT" prefHeight="58.0" prefWidth="600.0" styleClass="root-pane">
+         <children>
+            <Button fx:id="addButton" mnemonicParsing="false" onAction="#ddAction" styleClass="button-accent" text="Añadir">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="deleteButton" disable="true" mnemonicParsing="false" onAction="#deleteAction" text="Borrar">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
+               </padding>
+            </Button>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="30.0" top="20.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER" styleClass="root-pane">
+         <children>
+            <TableView fx:id="mapTable" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="382.0" prefWidth="750.0" style="-fx-background-radius: 0;" stylesheets="@../resources/estiloMain.css">
+              <columns>
+                <TableColumn fx:id="nameColumn" maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" resizable="false" text="Nombre" />
+                <TableColumn fx:id="regionColumn" prefWidth="186.0" text="Región" />
+                  <TableColumn fx:id="latMaxColumn" minWidth="0.0" prefWidth="146.0" text="Lat máx" />
+                  <TableColumn fx:id="latMinColumn" minWidth="0.0" prefWidth="147.0" text="Lat mín" />
+                  <TableColumn fx:id="lonMaxColumn" prefWidth="140.5" text="Lon máx" />
+                  <TableColumn fx:id="lonMinColumn" minWidth="1.5" prefWidth="128.5" text="Lon mín" />
+              </columns>
+            </TableView>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </HBox>
+      <VBox prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <GridPane fx:id="formGrid" hgap="10.0" prefHeight="155.0" prefWidth="781.0" styleClass="root-pane">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="221.3999755859375" minWidth="10.0" prefWidth="156.59998779296876" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="160.0" minWidth="10.0" prefWidth="99.20001220703125" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                  <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Latitud máx" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Latitud mín" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Longitud máx" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Longitud mín" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Fichero" GridPane.rowIndex="1" />
+                  <HBox spacing="5.0" GridPane.rowIndex="2">
+                     <children>
+                        <TextField fx:id="fileTextField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="130.0" />
+                        <Button fx:id="browseButton" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#browseAction" prefHeight="30.0" prefWidth="44.0" styleClass="button-green" text="+" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font size="9.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <TextField fx:id="lonMinField" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="30.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                  <TextField fx:id="lonMaxField" minHeight="-Infinity" prefHeight="30.0" prefWidth="88.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                  <TextField fx:id="latMinField" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="88.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <TextField fx:id="latMaxField" minHeight="-Infinity" prefHeight="30.0" prefWidth="88.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <VBox alignment="TOP_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                     <children>
+                        <Button fx:id="importButton" alignment="CENTER_RIGHT" contentDisplay="CENTER" mnemonicParsing="false" onAction="#importAction" styleClass="button-accent" text="Importar" />
+                     </children>
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
+                  </VBox>
+               </children>
+               <opaqueInsets>
+                  <Insets right="10.0" />
+               </opaqueInsets>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </GridPane>
+         </children>
+      </VBox>
+   </children>
+</VBox>

@@ -21,11 +21,9 @@ import upv.ipc.sportlib.SportActivityApp;
 
 public class FXMLInicioController implements Initializable {
 
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        
     }
 
     @FXML
@@ -58,13 +56,14 @@ public class FXMLInicioController implements Initializable {
                         getClass().getResource("/resources/estilos.css").toExternalForm()
                 );
                 mainStage.setScene(mainScene);
-                mainStage.setResizable(false);
+                mainStage.setMaximized(true);
                 mainStage.setTitle("Aplicación principal - Running la Safor");
-
+                
+                
                 mainStage.show();
             }
         } catch (IOException e) {
-            System.err.println("Error al cargar el formulario de registro: " + e.getMessage());
+            System.err.println("Error al cargar la ventana principal " + e.getMessage());
         }
     }
 
@@ -97,13 +96,14 @@ public class FXMLInicioController implements Initializable {
                         getClass().getResource("/resources/estilos.css").toExternalForm()
                 );
                 mainStage.setScene(mainScene);
-                mainStage.setResizable(false);
+                mainStage.setMaximized(true);
                 mainStage.setTitle("Aplicación principal - Running la Safor");
 
+                
                 mainStage.show();
             }
         } catch (IOException e) {
-            System.err.println("Error al cargar el formulario de registro: " + e.getMessage());
+            System.err.println("Error al cargar la ventana principal " + e.getMessage());
         }
     }
 

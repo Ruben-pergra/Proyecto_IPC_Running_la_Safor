@@ -1,140 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<VBox fx:id="rootVbox" onMouseClicked="#actualizarRootVbox" prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLRegisterController">
+<VBox fx:id="rootVbox" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#actualizarRootVbox" prefHeight="800.0" prefWidth="400.0" spacing="20.0" styleClass="pantalla-inicio" stylesheets="@../resources/estilos.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.FXMLRegisterController">
    <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #0081B4;">
+      <VBox alignment="CENTER_LEFT" prefHeight="600.0" prefWidth="360.0" spacing="14.0" styleClass="tarjeta">
          <children>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Register form">
-               <font>
-                  <Font name="Arial Rounded MT Bold" size="36.0" />
-               </font>
-               <effect>
-                  <Blend mode="ADD" />
-               </effect>
-            </Text>
-         </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </HBox>
-      <GridPane prefHeight="500.0" prefWidth="600.0" vgap="20.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="427.0" minWidth="10.0" prefWidth="319.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="275.0" minWidth="10.0" prefWidth="221.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="71.0" minHeight="10.0" prefHeight="59.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="62.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="41.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="67.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="43.0" minHeight="10.0" prefHeight="41.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="25.0">
                <children>
-                  <Label text="Avatar" textAlignment="CENTER" textFill="#0303eb">
-                     <VBox.margin>
-                        <Insets />
-                     </VBox.margin></Label>
-                  <ImageView fx:id="avatarImageView" fitHeight="50.0" fitWidth="100.0" onMouseClicked="#pickAvatar" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: HAND;">
+                  <Label style="-fx-text-fill: #ff5722;" styleClass="titulo_registrarse" text="Registrate" textFill="#fa3e05">
+                     <font>
+                        <Font name="System Bold" size="28.0" />
+                     </font>
+                  </Label>
+                  <ImageView fx:id="avatarImageView" fitHeight="117.0" fitWidth="110.0" onMouseClicked="#pickAvatar" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../resources/icono_avatar.jpg" />
+                        <Image url="@../resources/users-arrow-up-profile-avatar-user-svgrepo-com%20(1).png" />
                      </image>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
                   </ImageView>
-                  <Label text="(opcional)" textFill="#433c3c" />
+                  <Label styleClass="subtitulo" text="Añade tu foto de perfil" />
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox spacing="5.0">
                <children>
-                  <Label text="Nickname" textFill="#0303eb" />
-                  <TextField fx:id="nicknameField" />
-                  <Label fx:id="nicknameError" text="Entre 6 y 15 caracteres,letras,digitos,guiones" textFill="#e30b0b" />
+                  <Label text="Usuario:" textFill="#0303eb" />
+                  <TextField fx:id="nicknameField" prefWidth="250.0" />
+                  <Label fx:id="nicknameError" styleClass="label-error" text="Entre 6 y 15 caracteres,letras,digitos,guiones" textFill="#e30b0b">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+            <VBox spacing="5.0">
                <children>
-                  <Label text="Email" textFill="#0303eb" />
-                  <TextField fx:id="emailField" />
-                  <Label fx:id="emailError" text="Del tipo usuario@dominio" textFill="#e30b0b" />
+                  <Label text="Email:" textFill="#0303eb" />
+                  <TextField fx:id="emailField" prefWidth="250.0" />
+                  <Label fx:id="emailError" styleClass="label-error" text="Del tipo usuario@dominio" textFill="#e30b0b">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+            <VBox spacing="5.0">
                <children>
-                  <Label text="Password" textFill="#150ae8" />
-                  <PasswordField fx:id="passwordField">
-                     <VBox.margin>
-                        <Insets right="300.0" />
-                     </VBox.margin>
-                  </PasswordField>
-                  <Label fx:id="passwordError" text="Entre 8 y 20 caracteres, minimo una mayuscula, minuscula y simbolo" textFill="#f20c0c" />
+                  <Label text="Contraseña:" textFill="#150ae8" />
+                  <PasswordField fx:id="passwordField" prefWidth="250.0" />
+                  <Label fx:id="passwordError" styleClass="label-error" text="Entre 8 y 20 caracteres, mayuscula, minuscula, digito y simbolo" textFill="#f20c0c">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
+            <VBox spacing="5.0">
                <children>
-                  <Label text="Repeat Password" textFill="#1a13e8" />
-                  <PasswordField fx:id="passwordConfirmField">
-                     <VBox.margin>
-                        <Insets right="80.0" />
-                     </VBox.margin>
-                  </PasswordField>
-                  <Label fx:id="passwordConfirmError" text="Las contraseñas no coinciden" textFill="#dd0808" />
+                  <Label text="Repita la contraseña:" textFill="#150ae8" />
+                  <PasswordField fx:id="passwordConfirmField" prefWidth="250.0" />
+                  <Label fx:id="passwordConfirmError" styleClass="label-error" text="Las contraseñas no coinciden" textFill="#f20c0c">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
                </children>
             </VBox>
-            <Separator prefWidth="200.0" GridPane.rowIndex="4" />
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="5">
+            <VBox spacing="5.0">
                <children>
-                  <Label text="Birthdate" textFill="#1d06ee" />
+                  <Label text="Fecha de nacimiento:" textFill="#1d06ee" />
                   <DatePicker fx:id="dateField" />
-                  <Label fx:id="dateError" text="Debe ser mayor de 12 años" textFill="#da0606" />
+                  <Label fx:id="dateError" styleClass="label-error" text="Debe ser mayor de 12 años" textFill="#da0606">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
                </children>
             </VBox>
-            <HBox alignment="BOTTOM_RIGHT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+            <VBox alignment="CENTER" spacing="12.0">
                <children>
-                  <Button fx:id="bAccept" mnemonicParsing="false" onAction="#handleBAcceptOnAction" style="-fx-background-color: #0081B4;" text="Register" textFill="WHITE" />
-                  <Button fx:id="bCancel" mnemonicParsing="false" style="-fx-background-color: #0081B4;" text="Cancel" textAlignment="RIGHT" textFill="WHITE">
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin>
-                  </Button>
+                  <Button fx:id="bAccept" defaultButton="true" mnemonicParsing="false" onAction="#handleBAcceptOnAction" styleClass="boton-registro" text="Registrarse" textFill="WHITE" />
+                  <Button fx:id="bCancel" cancelButton="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" styleClass="boton-cancelar" text="Cancelar" textAlignment="RIGHT" textFill="WHITE" />
                </children>
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="20.0" right="20.0" top="20.0" />
-               </GridPane.margin>
-            </HBox>
+            </VBox>
          </children>
-         <VBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </VBox.margin>
          <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            <Insets bottom="20.0" left="16.0" right="16.0" top="20.0" />
          </padding>
-      </GridPane>
+      </VBox>
    </children>
+   <padding>
+      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+   </padding>
 </VBox>
