@@ -416,7 +416,6 @@ public class FXMLDocumentController implements Initializable {
 
         // Asignamos el contentGroup como contenido del ScrollPane
         map_scrollpane.setContent(contentGroup);
-
     }
 
     // =========================================================
@@ -547,6 +546,7 @@ public class FXMLDocumentController implements Initializable {
                 cargarEstadisticas(newAct);
                 
                 this.currentProjection = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), mapPane.getWidth(), mapPane.getHeight());
+                setupHoverMarker();
                 loadElevationChart(newAct);
                 dibujarRuta(newAct, currentProjection);
             }
@@ -776,10 +776,13 @@ public class FXMLDocumentController implements Initializable {
         alerta.setTitle("Ayuda general");
         alerta.setHeaderText("Funciones de la aplicacion"); 
         
-        alerta.setContentText("• Boton sesiones te lleva a las hechas por el usuario \n"
-                            + "• Para importar actividades ha de ser formato .gpx \n"
-                            + "• La pestaña mapas te permite crear nuevos propios tuyos");
-        
+        alerta.setContentText("• Puedes elegir entre los diferentes mapas y se mostrarán tus actividades \n"
+                            + "• En la pestaña mapas puedes añadir más o borrarlos \n"
+                            + "• Con click derecho sobre el mapa puedes hacer anotaciones \n"
+                            + "• En el apartado de usuario puedes cerrar sesion o modificar perfil \n"
+                            + "• Moviendo el ratón por la línea de desnivel (abajo de la imagen del mapa) puedes ver el trazado de la actividad \n"
+                            + "• El botón home (el icono de la casa), te sirve para retornar del apartado de sesiones al menú principal \n");
+
         alerta.showAndWait();
     }
     
