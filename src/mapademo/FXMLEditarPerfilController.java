@@ -89,7 +89,6 @@ public class FXMLEditarPerfilController implements Initializable {
     //Avatar//
     @FXML
     private ImageView avatarImageView;
-    //Para guardar la ruta q irá luego a la librería
     private String selectedAvatarPath = "";
     
     //RootVbox//
@@ -101,8 +100,6 @@ public class FXMLEditarPerfilController implements Initializable {
         field.setStyle(((isValid) ? "" : "-fx-background-color: #FCE5E0"));
     }
 
-    //=========================================================
-    // you must initialize here all related with the object 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Email //
@@ -110,9 +107,9 @@ public class FXMLEditarPerfilController implements Initializable {
         validEmail.setValue(Boolean.TRUE);
         emailError.setVisible(false);
 
-        //Check values when user leaves edits
+        //Checkea los valores cuando el usuario abandona la caja de texto
         emailField.focusedProperty().addListener((observable, oldValue, newValue)->{
-        if(!newValue){ //focus lost
+        if(!newValue){
             checkEmail();
             if (!validEmail.get()) {
                 if (listenerEmail == null) {
@@ -127,6 +124,7 @@ public class FXMLEditarPerfilController implements Initializable {
         validPassword = new SimpleBooleanProperty(true); 
         passwordError.setVisible(false);
 
+        //Checkea los valores cuando el usuario abandona la caja de texto
         passwordField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 checkPassword();
@@ -144,6 +142,7 @@ public class FXMLEditarPerfilController implements Initializable {
         confirmPasswords = new SimpleBooleanProperty(true);
         passwordConfirmError.setVisible(false);
 
+        //Checkea los valores cuando el usuario abandona la caja de texto
         passwordConfirmField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 checkPasswordsMatch();
@@ -165,6 +164,7 @@ public class FXMLEditarPerfilController implements Initializable {
         validDate = new SimpleBooleanProperty(true);
         dateError.setVisible(false);
 
+        //Checkea los valores cuando el usuario abandona la caja de texto
         dateField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 checkDate();
@@ -178,8 +178,9 @@ public class FXMLEditarPerfilController implements Initializable {
             }
         });
         
-        //Nickname//
+        //Añade todos los campos al usuario en  la bdd
         User currentUser = SportActivityApp.getInstance().getCurrentUser();
+        
         if (currentUser != null) {
             nicknameField.setText(currentUser.getNickName());
             emailField.setText(currentUser.getEmail());
@@ -207,15 +208,15 @@ public class FXMLEditarPerfilController implements Initializable {
     private void checkEmail(){
         String email = emailField.getText();
         boolean isValid = User.checkEmail(email);
-        validEmail.set(isValid); //actualiza la property asociada
-        showError(isValid, emailField, emailError); //muestra o esconde el mensaje de error
+        validEmail.set(isValid);
+        showError(isValid, emailField, emailError);
    }
     
     private void checkPassword() {
         String password = passwordField.getText();
         boolean isValid = User.checkPassword(password);
-        validPassword.set(isValid); //actualiza la property asociada
-        showError(isValid, passwordField, passwordError); //muestra o esconde el mensaje de error
+        validPassword.set(isValid);
+        showError(isValid, passwordField, passwordError);
     }
     
     private void checkPasswordsMatch() {
@@ -241,6 +242,7 @@ public class FXMLEditarPerfilController implements Initializable {
         showError(isValid, dateField, dateError);
     }
     
+    // Al darle al botón de aceptar establece los campos y cierra la ventana
     @FXML
     private void handleBAcceptOnAction(ActionEvent event) {
         if (validEmail.get() && validPassword.get() && confirmPasswords.get() && validDate.get()) {
@@ -259,6 +261,7 @@ public class FXMLEditarPerfilController implements Initializable {
         }
     }
     
+    // Establece la ruta del avatar y deja elegir de los archivos
     @FXML
     private void pickAvatar(MouseEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -278,6 +281,7 @@ public class FXMLEditarPerfilController implements Initializable {
         }
     }
     
+    // Deja actualizar las cajas de texto clickando fuera de estas 
     @FXML
     private void actualizarRootVbox(MouseEvent event) {
         rootVbox.requestFocus(); 

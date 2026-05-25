@@ -59,9 +59,6 @@ public class SesionesController implements Initializable {
     @FXML
     private Label lblFooterAnotaciones;
 
-    /**
-     * Initializes the controller class.
-     */
     private SportActivityApp app = SportActivityApp.getInstance();
 
     @Override
@@ -72,6 +69,7 @@ public class SesionesController implements Initializable {
 
     }
 
+    // Añade a todas las columnas la información de la bdd
     private void configurarColumnas() {
 
         colDuracion.setCellValueFactory(cell
@@ -107,6 +105,7 @@ public class SesionesController implements Initializable {
         );
     }
 
+    // Al entrar coge el usuario actual y establece las propiedades del usuario
     public void onEnter() {
         User user = app.getCurrentUser();
         if (user == null) {

@@ -37,11 +37,9 @@ public class FXMLIniSesionController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Al arrancar, escondemos los mensajes de error
         nicknameError.setVisible(false);
         passwordError.setVisible(false);
         
-        // Boton cancelar: cierra la ventana de login sin hacer nada más
         bCancel.setOnAction((event) -> {
             bCancel.getScene().getWindow().hide();
         });
@@ -71,7 +69,6 @@ public class FXMLIniSesionController implements Initializable {
 
     @FXML
     private void actualizarRootVbox(MouseEvent event) {
-        // Al hacer clic fuera, quitamos el foco de las cajas de texto
         rootVbox.requestFocus(); 
     }
 }

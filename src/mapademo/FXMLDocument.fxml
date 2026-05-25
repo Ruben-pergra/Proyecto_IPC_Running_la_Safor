@@ -28,7 +28,7 @@
    <center>
       <VBox prefHeight="556.0" prefWidth="853.0" stylesheets="@../resources/estilos.css">
          <children>
-            <SplitPane fx:id="splitPane" dividerPositions="0.35" pickOnBounds="false" prefHeight="506.0" prefWidth="854.0" VBox.vgrow="ALWAYS">
+            <SplitPane fx:id="splitPane" dividerPositions="0.15" pickOnBounds="false" prefHeight="506.0" prefWidth="854.0" VBox.vgrow="ALWAYS">
                <items>
                   <VBox prefHeight="38.0" prefWidth="320.0" styleClass="root-pane">
                      <children>
@@ -64,6 +64,7 @@
                               <Label alignment="TOP_CENTER" prefHeight="18.0" prefWidth="242.0" styleClass="titulo-seccion" text="ESTADISTICAS" />
                               <GridPane hgap="5.0">
                                  <columnConstraints>
+                                    <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="120.0" />
                                     <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="120.0" />
                                     <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" percentWidth="0.0" prefWidth="70.0" />
                                     <ColumnConstraints />
@@ -119,14 +120,14 @@
                                           <Insets left="5.0" />
                                        </GridPane.margin>
                                     </Label>
-                                    <Label fx:id="lblVelocidadMax" styleClass="label-stat-val" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                                    <Label fx:id="lblRitmoMedio" styleClass="label-stat-val" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                    <Label fx:id="lblAltitudMin" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                                    <Label fx:id="lblDuracion" styleClass="label-stat-val" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <Label fx:id="lblDesnivelPos" styleClass="label-stat-val" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                    <Label fx:id="lblDesnivelNeg" styleClass="label-stat-val" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                    <Label fx:id="lblAltitudMax" styleClass="label-stat-val" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                    <Label fx:id="lblDistanciaTotal" styleClass="label-stat-val" GridPane.columnIndex="1" />
+                                    <Label fx:id="lblVelocidadMax" styleClass="label-stat-val" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                    <Label fx:id="lblRitmoMedio" styleClass="label-stat-val" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                                    <Label fx:id="lblAltitudMin" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                                    <Label fx:id="lblDuracion" styleClass="label-stat-val" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <Label fx:id="lblDesnivelPos" styleClass="label-stat-val" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                    <Label fx:id="lblDesnivelNeg" styleClass="label-stat-val" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                    <Label fx:id="lblAltitudMax" styleClass="label-stat-val" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                                    <Label fx:id="lblDistanciaTotal" styleClass="label-stat-val" GridPane.columnIndex="2" />
                                  </children>
                               </GridPane>
                            </children>

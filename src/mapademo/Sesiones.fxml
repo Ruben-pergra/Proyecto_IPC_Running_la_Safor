@@ -26,7 +26,7 @@
          <children>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="tarjeta" stylesheets="@../resources/estilos.css">
                <children>
-                  <Label fx:id="lblTotalSesiones" prefHeight="5.0" prefWidth="3.0" styleClass="titulo-tarjeta" />
+                  <Label fx:id="lblTotalSesiones" styleClass="titulo-tarjeta" />
                   <Label prefHeight="18.0" prefWidth="107.0" styleClass="titulo-tarjeta" text="Sesiones totales" />
                </children>
             </VBox>
