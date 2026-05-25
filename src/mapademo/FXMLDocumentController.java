@@ -476,6 +476,7 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         hijosDefaultVistas = new java.util.ArrayList<>(boxVistas.getChildren());
+        
 
         // ── Configuración del slider de zoom ──────────────────────────
         zoom_slider.setMin(0.5);   // zoom mínimo: 50 %
@@ -541,18 +542,19 @@ public class FXMLDocumentController implements Initializable {
         actividades_listview.getSelectionModel().selectedItemProperty().addListener((obs, oldAct, newAct) -> {
             if (newAct != null && mapa_listview.getSelectionModel().getSelectedItem() != null) {
                 // Borramos rutas anteriores para que no se superpongan
-                mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle);
+                mapPane.getChildren().removeIf(n -> n instanceof javafx.scene.shape.Polyline || n instanceof Circle && n != hoverMarker);
                 
                 cargarEstadisticas(newAct);
-                setupHoverMarker();             
-                loadElevationChart(newAct); 
-                MapProjection mapaProj = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), mapPane.getWidth(), mapPane.getHeight());
-                dibujarRuta(newAct, mapaProj);
+                
+                this.currentProjection = new MapProjection(mapa_listview.getSelectionModel().getSelectedItem(), mapPane.getWidth(), mapPane.getHeight());
+                loadElevationChart(newAct);
+                dibujarRuta(newAct, currentProjection);
             }
         });
         
         buildMap(new File("maps/upv.jpg"));
         cargarListaMapas();
+        setupHoverMarker();
         
         mapa_listview.getSelectionModel().selectedItemProperty().addListener((observable, oldMap, newMap) -> {
             if (newMap != null) {
@@ -785,6 +787,7 @@ public class FXMLDocumentController implements Initializable {
     private void OnCerrarSesion(ActionEvent event) {
         try {
             mousePosition.getScene().getWindow().hide();
+            app.logout();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLInicio.fxml"));
             javafx.scene.Parent root = loader.load();
@@ -1034,7 +1037,10 @@ public class FXMLDocumentController implements Initializable {
             }
         }
     }
-private void setupHoverMarker() {
+    private void setupHoverMarker() {
+        if (hoverMarker != null) {
+            mapPane.getChildren().remove(hoverMarker);
+        }
         hoverMarker = new Circle(7);
         hoverMarker.setFill(Color.DODGERBLUE);
         hoverMarker.setStroke(Color.WHITE);
